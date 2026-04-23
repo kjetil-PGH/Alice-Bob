@@ -1,0 +1,1693 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hjelpesenter · Elektronisk tinglysing · Alice &amp; Bob</title>
+<style>
+  :root {
+    --ink: #1A1A1A;
+    --paper: #FFFFFF;
+    --cream: #FAF7F2;
+    --muted: #6B6963;
+    --muted-soft: #9C9A92;
+    --border: #E5E2D9;
+    --border-soft: #F0EEE7;
+    --accent: #2A4D3E;
+    --red: #B83A3A;
+    --red-bg: #F8EDED;
+    --amber: #B8751A;
+    --amber-bg: #FAF1DF;
+    --green: #2F6B3A;
+    --green-bg: #EDF4EB;
+    --blue: #264E7A;
+    --blue-bg: #EBF0F6;
+    --gray-bg: #F5F4F0;
+    --title-font: Georgia, 'Times New Roman', serif;
+    --body-font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: var(--body-font);
+    font-size: 16px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  a { color: var(--ink); }
+
+  /* ============ Layout ============ */
+  .layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    min-height: 100vh;
+  }
+
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .sidebar.open { display: block; position: fixed; inset: 0; z-index: 10; background: var(--cream); overflow-y: auto; }
+  }
+
+  /* ============ Sidebar ============ */
+  .sidebar {
+    border-right: 1px solid var(--border);
+    background: var(--paper);
+    padding: 24px 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+
+  .sidebar-header {
+    padding: 0 24px 20px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 20px;
+  }
+
+  .sidebar-logo {
+    height: 22px;
+    width: auto;
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .sidebar-title {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .search-wrap {
+    padding: 0 24px 20px;
+  }
+
+  .search-input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    background: var(--cream);
+    font-family: var(--body-font);
+    font-size: 14px;
+    color: var(--ink);
+    border-radius: 2px;
+  }
+
+  .search-input:focus {
+    outline: none;
+    border-color: var(--ink);
+    background: var(--paper);
+  }
+
+  .search-input::placeholder { color: var(--muted); }
+
+  .nav-section {
+    padding: 0 0 8px;
+  }
+
+  .nav-section-title {
+    padding: 12px 24px 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .nav-item {
+    display: block;
+    padding: 8px 24px 8px 36px;
+    font-size: 14px;
+    color: var(--muted);
+    text-decoration: none;
+    border-left: 2px solid transparent;
+    cursor: pointer;
+    transition: color 0.1s, border-color 0.1s, background 0.1s;
+  }
+
+  .nav-item:hover {
+    color: var(--ink);
+    background: var(--border-soft);
+  }
+
+  .nav-item.active {
+    color: var(--ink);
+    font-weight: 600;
+    border-left-color: var(--ink);
+    background: var(--border-soft);
+  }
+
+  .nav-item-num {
+    display: inline-block;
+    width: 20px;
+    color: var(--muted-soft);
+    font-variant-numeric: tabular-nums;
+    font-size: 12px;
+  }
+
+  /* ============ Main content ============ */
+  .main {
+    padding: 48px 64px 120px;
+    max-width: 900px;
+  }
+
+  @media (max-width: 900px) {
+    .main { padding: 32px 24px 80px; }
+  }
+
+  .mobile-menu-btn {
+    display: none;
+    margin-bottom: 24px;
+    padding: 8px 14px;
+    border: 1px solid var(--ink);
+    background: var(--paper);
+    font-family: var(--body-font);
+    font-size: 13px;
+    cursor: pointer;
+    border-radius: 2px;
+  }
+
+  @media (max-width: 900px) {
+    .mobile-menu-btn { display: inline-block; }
+  }
+
+  /* ============ Breadcrumb ============ */
+  .breadcrumb {
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  /* ============ Article ============ */
+  .article {
+    display: none;
+  }
+
+  .article.active { display: block; }
+
+  .article h1 {
+    font-family: var(--title-font);
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    margin-bottom: 12px;
+  }
+
+  .article .lede {
+    font-size: 18px;
+    color: var(--muted);
+    font-style: italic;
+    margin-bottom: 40px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .article h2 {
+    font-family: var(--title-font);
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 48px 0 16px;
+  }
+
+  .article h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 24px 0 8px;
+  }
+
+  .article p {
+    margin-bottom: 16px;
+    color: var(--ink);
+  }
+
+  .article ul, .article ol {
+    margin: 0 0 20px 24px;
+    padding: 0;
+  }
+
+  .article li {
+    margin-bottom: 8px;
+    padding-left: 4px;
+  }
+
+  /* ============ Step layout ============ */
+  .step {
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    gap: 20px;
+    margin-bottom: 40px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .step:last-child { border-bottom: none; }
+
+  .step-num {
+    width: 40px;
+    height: 40px;
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--title-font);
+    font-weight: 700;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .step-content h3 {
+    font-family: var(--title-font);
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0 0 12px;
+    line-height: 1.3;
+  }
+
+  .step-screenshot {
+    margin-top: 20px;
+    border: 1px solid var(--border);
+    background: var(--paper);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .step-screenshot img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .step-caption {
+    font-size: 12px;
+    color: var(--muted);
+    font-style: italic;
+    padding: 8px 12px;
+    background: var(--gray-bg);
+    border-top: 1px solid var(--border);
+  }
+
+  /* ============ Callouts ============ */
+  .callout {
+    margin: 20px 0;
+    padding: 16px 20px;
+    border-left: 3px solid var(--amber);
+    background: var(--amber-bg);
+  }
+
+  .callout.blue { background: var(--blue-bg); border-left-color: var(--blue); }
+  .callout.gray { background: var(--gray-bg); border-left-color: var(--muted); }
+  .callout.red { background: var(--red-bg); border-left-color: var(--red); }
+  .callout.green { background: var(--green-bg); border-left-color: var(--green); }
+
+  .callout-title {
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .callout:not(.blue):not(.gray):not(.red):not(.green) .callout-title { color: var(--amber); }
+  .callout.blue .callout-title { color: var(--blue); }
+  .callout.gray .callout-title { color: var(--ink); }
+  .callout.red .callout-title { color: var(--red); }
+  .callout.green .callout-title { color: var(--green); }
+
+  .callout p { margin: 0; font-size: 14px; color: var(--ink); }
+  .callout p + p { margin-top: 8px; }
+
+  /* ============ Welcome / home ============ */
+  .welcome-hero {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 32px;
+    align-items: center;
+    margin-bottom: 48px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  @media (max-width: 720px) {
+    .welcome-hero { grid-template-columns: 1fr; }
+  }
+
+  .welcome-text h1 {
+    font-family: var(--title-font);
+    font-size: 44px;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    margin-bottom: 12px;
+  }
+
+  .welcome-text p {
+    font-size: 18px;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  .welcome-illustration img {
+    height: 120px;
+    width: auto;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+  }
+
+  .topic-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+
+  .topic-card {
+    padding: 20px 22px;
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    cursor: pointer;
+    transition: border-color 0.15s, transform 0.15s;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
+  .topic-card:hover {
+    border-color: var(--ink);
+    transform: translateY(-2px);
+  }
+
+  .topic-card-num {
+    font-family: var(--title-font);
+    font-style: italic;
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 4px;
+    display: block;
+  }
+
+  .topic-card-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: var(--ink);
+  }
+
+  .topic-card-desc {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  /* FAQ quick-reference cards */
+  .faq-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin: 24px 0 48px;
+  }
+
+  .faq-card {
+    padding: 16px;
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    transition: border-color 0.15s;
+  }
+
+  .faq-card:hover { border-color: var(--ink); }
+
+  .faq-card-pill {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 2px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    margin-bottom: 8px;
+  }
+
+  .faq-card.red .faq-card-pill { background: var(--red-bg); color: var(--red); }
+  .faq-card.amber .faq-card-pill { background: var(--amber-bg); color: var(--amber); }
+  .faq-card.green .faq-card-pill { background: var(--green-bg); color: var(--green); }
+
+  .faq-card-title { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+  .faq-card-desc { font-size: 12px; color: var(--muted); }
+
+  /* ============ Pagination ============ */
+  .pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    margin-top: 56px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    gap: 16px;
+  }
+
+  .pagination a {
+    flex: 1;
+    padding: 14px 18px;
+    border: 1px solid var(--border);
+    background: var(--paper);
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    transition: border-color 0.15s;
+    border-radius: 2px;
+  }
+
+  .pagination a:hover { border-color: var(--ink); }
+
+  .pagination a.prev { text-align: left; }
+  .pagination a.next { text-align: right; }
+  .pagination a.disabled { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
+
+  .pagination-label {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .pagination-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  /* ============ Contact section ============ */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 24px;
+  }
+
+  @media (max-width: 720px) {
+    .contact-grid { grid-template-columns: 1fr; }
+  }
+
+  .contact-card {
+    padding: 28px;
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+  }
+
+  .contact-card h3 {
+    font-family: var(--title-font);
+    font-size: 22px;
+    font-weight: 700;
+    margin-top: 8px;
+    margin-bottom: 4px;
+  }
+
+  .contact-card .primary {
+    font-family: var(--title-font);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--accent);
+    margin: 12px 0;
+  }
+
+  .contact-card .primary a { color: inherit; text-decoration: none; }
+  .contact-card .primary a:hover { text-decoration: underline; }
+
+  .contact-card .logo-mini {
+    height: 22px;
+    width: auto;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .contact-card .desc {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+
+  .contact-card .when {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 8px;
+  }
+
+  .contact-card .when strong { color: var(--ink); }
+
+  /* ============ Code / inline UI refs ============ */
+  code {
+    padding: 2px 6px;
+    background: var(--gray-bg);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: 13px;
+  }
+
+  /* Three-outcomes section (for valideringsfeil-article) */
+  .outcomes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 24px 0;
+  }
+
+  @media (max-width: 720px) { .outcomes { grid-template-columns: 1fr; } }
+
+  .outcome {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    padding: 16px;
+    border-radius: 2px;
+  }
+
+  .outcome-pill {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 2px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+  }
+  .outcome.red .outcome-pill { background: var(--red-bg); color: var(--red); }
+  .outcome.amber .outcome-pill { background: var(--amber-bg); color: var(--amber); }
+  .outcome.green .outcome-pill { background: var(--green-bg); color: var(--green); }
+
+  .outcome h4 { font-size: 14px; margin-bottom: 10px; }
+  .outcome ul { margin: 0; padding-left: 16px; }
+  .outcome li { font-size: 12px; color: var(--muted); margin-bottom: 3px; }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <a href="#" onclick="goTo('home'); return false;">
+        <img src="images/logo.png" alt="Alice &amp; Bob" class="sidebar-logo">
+      </a>
+      <div class="sidebar-title">Hjelpesenter</div>
+    </div>
+
+    <div class="search-wrap">
+      <input type="text" class="search-input" id="searchInput" placeholder="Søk…" oninput="doSearch()">
+    </div>
+
+    <nav id="nav">
+      <div class="nav-section">
+        <div class="nav-section-title">Kom i gang</div>
+        <a href="#" class="nav-item" data-article="home" onclick="goTo('home'); return false;"><span class="nav-item-num">·</span>Velkommen</a>
+        <a href="#" class="nav-item" data-article="oversikt" onclick="goTo('oversikt'); return false;"><span class="nav-item-num">·</span>Hva tinglysing er</a>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">Vitec Next</div>
+        <a href="#" class="nav-item" data-article="vitec-bestille" onclick="goTo('vitec-bestille'); return false;"><span class="nav-item-num">1.</span>Bestill Alice &amp; Bob-tjeneste</a>
+        <a href="#" class="nav-item" data-article="vitec-dokumenter" onclick="goTo('vitec-dokumenter'); return false;"><span class="nav-item-num">2.</span>Velg dokument</a>
+        <a href="#" class="nav-item" data-article="vitec-skjote" onclick="goTo('vitec-skjote'); return false;"><span class="nav-item-num">3.</span>Opprett skjøte</a>
+        <a href="#" class="nav-item" data-article="vitec-valideringsfeil" onclick="goTo('vitec-valideringsfeil'); return false;"><span class="nav-item-num">4.</span>Lagring med valideringsfeil</a>
+        <a href="#" class="nav-item" data-article="vitec-signering" onclick="goTo('vitec-signering'); return false;"><span class="nav-item-num">5.</span>Send til signering</a>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">Oppsett</div>
+        <a href="#" class="nav-item" data-article="altinn-tilganger" onclick="goTo('altinn-tilganger'); return false;"><span class="nav-item-num">·</span>Altinn-tilganger (AFPANT)</a>
+        <a href="#" class="nav-item" data-article="bankid" onclick="goTo('bankid'); return false;"><span class="nav-item-num">·</span>Logge inn med BankID</a>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">Propware</div>
+        <a href="#" class="nav-item" data-article="propware-dokument" onclick="goTo('propware-dokument'); return false;"><span class="nav-item-num">1.</span>Legg til dokument</a>
+        <a href="#" class="nav-item" data-article="propware-skjote" onclick="goTo('propware-skjote'); return false;"><span class="nav-item-num">2.</span>Send skjøte til signering</a>
+        <a href="#" class="nav-item" data-article="propware-vedlegg" onclick="goTo('propware-vedlegg'); return false;"><span class="nav-item-num">3.</span>Legg til vedlegg</a>
+        <a href="#" class="nav-item" data-article="propware-tinglys" onclick="goTo('propware-tinglys'); return false;"><span class="nav-item-num">4.</span>Tinglys signerte dokumenter</a>
+        <a href="#" class="nav-item" data-article="propware-pantedokument" onclick="goTo('propware-pantedokument'); return false;"><span class="nav-item-num">5.</span>Pantedokument fra bank</a>
+        <a href="#" class="nav-item" data-article="propware-sikring" onclick="goTo('propware-sikring'); return false;"><span class="nav-item-num">6.</span>Opprett sikring</a>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">Referanse</div>
+        <a href="#" class="nav-item" data-article="valideringsfeil" onclick="goTo('valideringsfeil'); return false;"><span class="nav-item-num">·</span>Valideringsfeil</a>
+        <a href="#" class="nav-item" data-article="vedleggstyper" onclick="goTo('vedleggstyper'); return false;"><span class="nav-item-num">·</span>Støttede vedleggstyper</a>
+        <a href="#" class="nav-item" data-article="kontakt" onclick="goTo('kontakt'); return false;"><span class="nav-item-num">·</span>Hjelp og kontakt</a>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <main class="main">
+    <button class="mobile-menu-btn" onclick="toggleSidebar()">☰ Meny</button>
+
+    <!-- ============ HOME ============ -->
+    <article class="article active" data-article="home">
+      <div class="welcome-hero">
+        <div class="welcome-text">
+          <h1>Hjelpesenter for elektronisk tinglysing</h1>
+          <p>En praktisk veileder for å opprette, signere og tinglyse dokumenter gjennom Alice &amp; Bob.</p>
+        </div>
+        <div class="welcome-illustration">
+          <img src="images/alice-bob.png" alt="Alice og Bob">
+        </div>
+      </div>
+
+      <h2 style="margin-top: 0;">Populære emner</h2>
+
+      <div class="topic-grid">
+        <a class="topic-card" href="#" onclick="goTo('vitec-bestille'); return false;">
+          <span class="topic-card-num">Vitec Next</span>
+          <div class="topic-card-title">Komplett Vitec-flyt</div>
+          <div class="topic-card-desc">Fra opprettelse til signering</div>
+        </a>
+        <a class="topic-card" href="#" onclick="goTo('propware-dokument'); return false;">
+          <span class="topic-card-num">Propware</span>
+          <div class="topic-card-title">Komplett Propware-flyt</div>
+          <div class="topic-card-desc">Dokumenter, vedlegg og tinglysing</div>
+        </a>
+        <a class="topic-card" href="#" onclick="goTo('valideringsfeil'); return false;">
+          <span class="topic-card-num">Referanse</span>
+          <div class="topic-card-title">Valideringsfeil</div>
+          <div class="topic-card-desc">Hva betyr meldingene fra Kartverket?</div>
+        </a>
+        <a class="topic-card" href="#" onclick="goTo('altinn-tilganger'); return false;">
+          <span class="topic-card-num">Oppsett</span>
+          <div class="topic-card-title">Altinn-tilganger (AFPANT)</div>
+          <div class="topic-card-desc">Førstegangsoppsett for virksomheten</div>
+        </a>
+        <a class="topic-card" href="#" onclick="goTo('vedleggstyper'); return false;">
+          <span class="topic-card-num">Referanse</span>
+          <div class="topic-card-title">Vedleggstyper</div>
+          <div class="topic-card-desc">Hva som støttes og når de trengs</div>
+        </a>
+        <a class="topic-card" href="#" onclick="goTo('kontakt'); return false;">
+          <span class="topic-card-num">Hjelp</span>
+          <div class="topic-card-title">Kontakt oss</div>
+          <div class="topic-card-desc">Kartverket og Alice &amp; Bob</div>
+        </a>
+      </div>
+
+      <h2>De tre utfallene fra Kartverket</h2>
+      <p>Når du sender en forsendelse til tinglysing, er resultatet alltid ett av disse tre. Klikk for utdypende forklaring.</p>
+
+      <div class="faq-cards">
+        <a class="faq-card red" href="#" onclick="goTo('valideringsfeil'); return false;">
+          <span class="faq-card-pill">AVVIST</span>
+          <div class="faq-card-title">Forsendelsen stoppes</div>
+          <div class="faq-card-desc">Automatisk avvist før saksbehandler ser den</div>
+        </a>
+        <a class="faq-card amber" href="#" onclick="goTo('valideringsfeil'); return false;">
+          <span class="faq-card-pill">MANUELL</span>
+          <div class="faq-card-title">Saksbehandler vurderer</div>
+          <div class="faq-card-desc">Går til manuell behandling hos Kartverket</div>
+        </a>
+        <a class="faq-card green" href="#" onclick="goTo('valideringsfeil'); return false;">
+          <span class="faq-card-pill">GODKJENT</span>
+          <div class="faq-card-title">Tinglyst automatisk</div>
+          <div class="faq-card-desc">Registrert i grunnboken på sekunder</div>
+        </a>
+      </div>
+    </article>
+
+    <!-- ============ OVERSIKT ============ -->
+    <article class="article" data-article="oversikt">
+      <div class="breadcrumb">Kom i gang</div>
+      <h1>Hva er elektronisk tinglysing?</h1>
+      <p class="lede">Den tradisjonelle papirprosessen, fra slutt til slutt, i sekunder.</p>
+
+      <p><strong>Alice ønsker å overføre en eiendom til Bob.</strong> I stedet for papirskjøter som sendes med post til Kartverket, signerer Alice og Bob elektronisk med BankID. Dokumentet valideres og registreres i grunnboken i løpet av sekunder.</p>
+
+      <p>Det vi bygger, er infrastrukturen som gjør dette sikkert: signaturene er ekte, meldingene er kryptert, og hver forsendelse er sporbar.</p>
+
+      <h2>Hva denne veilederen dekker</h2>
+      <p>Veilederen er delt i fem hoveddeler, avhengig av hvilket fagsystem du bruker og hva du skal gjøre:</p>
+
+      <ul>
+        <li><strong>Vitec Next</strong> — Bestill Alice &amp; Bob-tjenesten og opprett tinglysingsdokumenter direkte fra oppdraget.</li>
+        <li><strong>Oppsett</strong> — Førstegangsoppsett av Altinn-tilganger og BankID-innlogging.</li>
+        <li><strong>Propware</strong> — Full flyt for eiendomsadvokater: dokumentopprettelse, signering, vedlegg, tinglysing, pantedokument fra bank og sikring.</li>
+        <li><strong>Referanse</strong> — Oppslagsverk for valideringsfeil, vedleggstyper og kontaktinfo.</li>
+      </ul>
+
+      <div class="callout blue">
+        <div class="callout-title">Tips</div>
+        <p>Bruk søkefeltet til venstre for å finne akkurat det du trenger. Hver side har skjermbilder som viser nøyaktig hvor du skal klikke.</p>
+      </div>
+
+      <div class="pagination">
+        <a class="prev" href="#" onclick="goTo('home'); return false;">
+          <div class="pagination-label">← Tilbake</div>
+          <div class="pagination-title">Velkommen</div>
+        </a>
+        <a class="next" href="#" onclick="goTo('vitec-bestille'); return false;">
+          <div class="pagination-label">Neste →</div>
+          <div class="pagination-title">Bestill Alice &amp; Bob-tjeneste</div>
+        </a>
+      </div>
+    </article>
+
+    <!-- ============ VITEC: BESTILLE ============ -->
+    <article class="article" data-article="vitec-bestille">
+      <div class="breadcrumb">Vitec Next · Steg 1 av 5</div>
+      <h1>Bestill Alice &amp; Bob-tjeneste</h1>
+      <p class="lede">Aktiver e-tinglysing på et oppdrag i Vitec Next.</p>
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h3>Opprett oppdraget i Vitec som vanlig</h3>
+          <p>Følg standard prosedyre for å opprette et oppdrag. Ingen ekstra steg er nødvendig her.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h3>Gå til Marked og tjenester → Bestill tjeneste → Alice &amp; Bob-tinglysing</h3>
+          <p>I sidemenyen på oppdraget, velg <code>Marked og tjenester</code>. Klikk <code>Bestill tjeneste</code>, og velg <strong>Alice &amp; Bob - Tinglysing</strong> fra listen.</p>
+
+          <div class="step-screenshot">
+            <img src="images/page-02.jpg" alt="Skjermbilde: Marked og tjenester → Bestill tjeneste → Alice &amp; Bob - Tinglysing">
+            <div class="step-caption">Vitec Next: Sidemeny → Marked og tjenester → Bestill tjeneste</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout green">
+        <div class="callout-title">Ferdig</div>
+        <p>Når tjenesten er bestilt, er oppdraget klart for e-tinglysing. Du kan nå gå videre til å opprette selve tinglysingsdokumentene.</p>
+      </div>
+
+      <div class="pagination">
+        <a class="prev" href="#" onclick="goTo('oversikt'); return false;">
+          <div class="pagination-label">← Forrige</div>
+          <div class="pagination-title">Hva tinglysing er</div>
+        </a>
+        <a class="next" href="#" onclick="goTo('vitec-dokumenter'); return false;">
+          <div class="pagination-label">Neste →</div>
+          <div class="pagination-title">Velg dokument</div>
+        </a>
+      </div>
+    </article>
+
+    <!-- ============ VITEC: DOKUMENTER ============ -->
+    <article class="article" data-article="vitec-dokumenter">
+      <div class="breadcrumb">Vitec Next · Steg 2 av 5</div>
+      <h1>Velg dokument som skal tinglyses</h1>
+      <p class="lede">Standard tinglysingsmetode er elektronisk på alle oppdrag.</p>
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h3>Bekreft at ønsket tinglysingsmetode er elektronisk</h3>
+          <p>Ønsket tinglysingsmetode er satt til <strong>Elektronisk tinglysing</strong> som standard på alle oppdrag. Hvis du trenger å endre dette, klikk <code>Endre</code> ved siden av tinglysingsmetoden.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h3>Klikk «Legg til dokument» og velg type</h3>
+          <p>På oppdragssiden, klikk <code>Legg til dokument</code>. En meny dukker opp med disse valgene:</p>
+          <ul>
+            <li><strong>Skjøte</strong> — overføring av hjemmel</li>
+            <li><strong>Hjemmelserklæring</strong> — ved dødsbo eller lignende</li>
+            <li><strong>Pantedokument fra bank</strong> — pantesetting av eiendom</li>
+            <li><strong>Sikring</strong> — sperre for videre tinglysing</li>
+            <li><strong>Sletting</strong> — slette tinglyst pant eller heftelser</li>
+          </ul>
+
+          <div class="step-screenshot">
+            <img src="images/page-03.jpg" alt="Skjermbilde: Legg til dokument → velg type">
+            <div class="step-caption">Vitec Next: Legg til dokument-menyen</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pagination">
+        <a class="prev" href="#" onclick="goTo('vitec-bestille'); return false;">
+          <div class="pagination-label">← Forrige</div>
+          <div class="pagination-title">Bestill Alice &amp; Bob-tjeneste</div>
+        </a>
+        <a class="next" href="#" onclick="goTo('vitec-skjote'); return false;">
+          <div class="pagination-label">Neste →</div>
+          <div class="pagination-title">Opprett skjøte</div>
+        </a>
+      </div>
+    </article>
+
+    <!-- ============ VITEC: SKJØTE ============ -->
+    <article class="article" data-article="vitec-skjote">
+      <div class="breadcrumb">Vitec Next · Steg 3 av 5</div>
+      <h1>Opprett et nytt skjøte</h1>
+      <p class="lede">Følg flyten i systemet og fyll inn informasjon som mangler.</p>
+
+      <p>Mye av informasjonen i dokumentet er utfylt basert på informasjon hentet fra Vitec. Du kan likevel redigere og endre data der det er relevant. <strong>Alle hvite felt er redigerbare.</strong></p>
+
+      <div class="step-screenshot">
+        <img src="images/page-04.jpg" alt="Skjermbilde: Nytt skjøte-skjema med redigerbare felter">
+        <div class="step-caption">Skjema for nytt skjøte — hvite felt er redigerbare, grå er utfylt fra Vitec</div>
+      </div>
+
+      <div class="callout">
+        <div class="callout-title">Vanlige redigeringsbehov</div>
+        <p>Bruk- og boligtype hentes automatisk, men må av og til justeres. Dokumentavgiftsgrunnlag kan også avvike fra kjøpesum ved spesielle tilfeller som arveoppgjør.</p>
+      </div>
+
+      <div class="pagination">
+        <a class="prev" href="#" onclick="goTo('vitec-dokumenter'); return false;">
+          <div class="pagination-label">← Forrige</div>
+          <div class="pagination-title">Velg dokument</div>
+        </a>
+        <a class="next" href="#" onclick="goTo('vitec-valideringsfeil'); return false;">
+          <div class="pagination-label">Neste →</div>
+          <div class="pagination-title">Lagring med valideringsfeil</div>
+        </a>
+      </div>
+    </article>
+
+    <!-- ============ VITEC: VALIDERINGSFEIL ============ -->
+    <article class="article" data-article="vitec-valideringsfeil">
+      <div class="breadcrumb">Vitec Next · Steg 4 av 5</div>
+      <h1>Lagring med valideringsfeil</h1>
+      <p class="lede">Nyttig når dokumentet mangler noe som kommer senere — for eksempel hjemmelserklæring eller vedlegg.</p>
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h3>Huk av «Lagre selv med valideringsfeil fra Kartverket»</h3>
+          <p>Dette lar deg lagre dokumentet selv om det har feil fra Kartverket. Det er nyttig for eksempel når man forbereder et skjøte før hjemmelserklæring er tinglyst, eller når dokumentet krever vedlegg som legges til senere.</p>
+
+          <div class="step-screenshot">
+            <img src="images/page-05.jpg" alt="Skjermbilde: Lagre selv med valideringsfeil-avkrysning">
+            <div class="step-caption">Huk av «Lagre selv med valideringsfeil fra Kartverket» og klikk Lagre</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout">
+        <div class="callout-title">Viktig</div>
+        <p>Et ferdig signert tinglysingsdokument kan ikke endres. Du må alltid lese valideringsmeldingene nøye før du sender til signering. Se <a href="#" onclick="goTo('valideringsfeil'); return false;">fullstendig oversikt over valideringsfeil</a>.</p>
+      </div>
+
+      <div class="pagination">
+        <a class="prev" href="#" onclick="goTo('vitec-skjote'); return false;">
+          <div class="pagination-label">← Forrige</div>
+          <div class="pagination-title">Opprett skjøte</div>
+        </a>
+        <a class="next" href="#" onclick="goTo('vitec-signering'); return false;">
+          <div class="pagination-label">Neste →</div>
+          <div class="pagination-title">Send til signering</div>
+        </a>
+      </div>
+    </article>
+
+    <!-- ============ VITEC: SIGNERING ============ -->
+    <article class="article" data-article="vitec-signering">
+      <div class="breadcrumb">Vitec Next · Steg 5 av 5</div>
+      <h1>Send skjøtet til signering</h1>
+      <p class="lede">Dersom dokumentet er klart og ikke trenger vedlegg eller eksterne signaturer.</p>
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h3>Klikk «Send til signering»</h3>
+          <p>Du kan nå sende skjøtet til signering dersom det ikke er behov for hjelpedokumenter eller signaturer fra personer utenfor oppdraget.</p>
+
+          <div class="step-screenshot">
+            <img src="images/page-06.jpg" alt="Skjermbilde: Send til signering-knapp">
+            <div class="step-caption">Send til signering-knappen på oppdragssiden</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h3>Selgers signeringsportal oppdateres automatisk</h3>
+          <p>Selgers signeringsportal vil automatisk oppdateres med tinglysingsdokumentet som skal signeres. Dette er den samme kundeportalen som selger allerede har benyttet for å oppgi personalia i oppdraget.</p>
+
+          <div class="step-screenshot">
+            <img src="images/page-07.jpg" alt="Skjermbilde: Signeringsportalen med lenke som kan sendes til selger">
+            <div class="step-caption">Ved behov kan du sende lenken til selger på nytt: propware.no/signering</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h3>Legg til vedlegg (hvis nødvendig)</h3>
+          <p>Hvis dokumentet krever vedlegg, klikk de tre prikkene (<code>⋯</code>) til høyre for dokumentet og velg <code>Legg til vedlegg</code>.</p>
+
+          <div class="step-screenshot">
+            <img src="images/page-08.jpg" alt="Skjermbilde: Last opp vedlegg-dialog">
+            <div class="step-caption">Dra filen hit eller klikk for å laste opp — velg deretter vedleggskategori</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout green">
+        <div class="callout-title">Ferdig med Vitec-flyten</div>
+        <p>Når dokumentet er signert av alle parter, går det automatisk videre til tinglysing hos Kartverket. Les mer om <a href="#" onclick="goTo('valideringsfeil'); return false;">hva som kan skje ved tinglysing</a>.</p>
+      </div>
+
+      <div class="pagination">
+        <a class="prev" href="#" onclick="goTo('vitec-valideringsfeil'); return false;">
+          <div class="pagination-label">← Forrige</div>
+          <div class="pagination-title">Lagring med valideringsfeil</div>
+        </a>
+        <a class="next" href="#" onclick="goTo('altinn-tilganger'); return false;">
+          <div class="pagination-label">Neste →</div>
+          <div class="pagination-title">Altinn-tilganger (AFPANT)</div>
+        </a>
+      </div>
+    </article>
+
+    <!-- ============ ALTINN ============ -->
+    <article class="article" data-article="altinn-tilganger">
+      <div class="breadcrumb">Oppsett · Førstegangsoppsett</div>
+      <h1>Altinn-tilganger (AFPANT)</h1>
+      <p class="lede">Delegér rettigheter til Alice &amp; Bob AS i Altinn for å kommunisere med Kartverket på vegne av virksomheten.</p>
+
+      <div class="callout blue">
+        <div class="callout-title">Hva er AFPANT?</div>
+        <p>Digital samhandling ved eiendomshandel (AFPANT) er en tjeneste levert av Kartverket som tilbyr løsninger for samhandling gjennom Altinn. Alice &amp; Bob sender inn nødvendig informasjon til Kartverket, som legger til din virksomhet i AFPANT.</p>
+      </div>
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h3>Finn hvem som har fullmakt i din virksomhet</h3>
+          <p>Finn ut hvem i din virksomhet som har fullmakt til å delegere rettigheter i Altinn. Logg inn i Altinn og gå inn på din virksomhet. Velg <code>Profil</code> fra menyen øverst på siden.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h3>Velg «Andre med rettigheter til virksomheten»</h3>
+          <p>Klikk på <code>Andre med rettigheter til virksomheten</code> og deretter <code>Legg til person eller virksomhet</code>.</p>
+
+          <div class="step-screenshot">
+            <img src="images/page-11.jpg" alt="Skjermbilde: Altinn profil → Andre med rettigheter">
+            <div class="step-caption">Altinn: Profil-menyen med «Andre med rettigheter til virksomheten»</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h3>Legg til Alice &amp; Bob AS som ekstern virksomhet</h3>
+          <p>Trykk på <code>Ekstern virksomhet</code> og legg til <strong>Alice &amp; Bob AS</strong> med organisasjonsnummer <strong>931686054</strong>.</p>
+
+          <div class="step-screenshot">
+            <img src="images/page-12.jpg" alt="Skjermbilde: Legg til Alice &amp; Bob og tjenestekode 4752">
+            <div class="step-caption">Ekstern virksomhet + tjenestekode 4752 (Digital samhandling ved eiendomshandel)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h3>Gi tilgang til tjenestekode 4752</h3>
+          <p>Trykk på <code>Gi tilgang til enkelttjenester</code> og søk frem tjenesten med kode <strong>4752 (Digital samhandling ved eiendomshandel)</strong>, og klikk på den.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <h3>Trykk «Neste» og velg «Gi rettigheter»</h3>
+          <p>Fullfør rettighetsoverføringen ved å klikke <code>Neste</code> og deretter <code>Gi rettigheter</code>.</p>
+
+          <div class="step-screenshot">
+            <img src="images/page-13.jpg" alt="Skjermbilde: Gi nye rettigheter — Neste">
+            <div class="step-caption">Siste steg: Trykk Neste for å fullføre rettighetsoverføringen</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout green">
+        <div class="callout-title">Ferdig</div>
+        <p>Alice &amp; Bob AS kan nå kommunisere med Kartverket på vegne av din virksomhet. Dette er en engangsjobb per organisasjonsnummer.</p>
+      </div>
+
+      <div class="pagination">
+        <a class="prev" href="#" onclick="goTo('vitec-signering'); return false;">
+          <div class="pagination-label">← Forrige</div>
+          <div class="pagination-title">Send til signering</div>
+        </a>
+        <a class="next" href="#" onclick="goTo('bankid'); return false;">
+          <div class="pagination-label">Neste →</div>
+          <div class="pagination-title">Logge inn med BankID</div>
+        </a>
+      </div>
+    </article>
+
+    <!-- ============ BANKID ============ -->
+    <article class="article" data-article="bankid">
+      <div class="breadcrumb">Oppsett · Innlogging</div>
+      <h1>Logg inn med BankID</h1>
+      <p class="lede">Alle signeringer og tilganger bruker BankID for sikker autentisering.</p>
+
+      <div class="step-screenshot">
+        <img src="images/page-14.jpg" alt="Skjermbilde: Innloggingsskjerm med Alice &amp; Bob-illustrasjon og BankID-prompt">
+        <div class="step-caption">Alice &amp; Bob sin innloggingsskjerm med BankID</div>
+      </div>
+
+      <p>Innlogging skjer via BankID. Taste inn fødselsnummer og følg BankID-flyten som normalt. Ingen spesielle steg er nødvendig.</p>
+
+      <div class="callout blue">
+        <div class="callout-title">Sikkerhet</div>
+        <p>Alice &amp; Bob er bygget på kryptografisk infrastruktur — signaturene dine er ekte, meldingene kryptert, og hver forsendelse sporbar. BankID er én del av dette.</p>
+      </div>
+
+      <div class="pagination">
+        <a class="prev" href="#" onclick="goTo('altinn-tilganger'); return false;">
+          <div class="pagination-label">← Forrige</div>
+          <div class="pagination-title">Altinn-tilganger</div>
+        </a>
+        <a class="next" href="#" onclick="goTo('propware-dokument'); return false;">
+          <div class="pagination-label">Neste →</div>
+          <div class="pagination-title">Propware: Legg til dokument</div>
+        </a>
+      </div>
+    </article>
+
+    <!-- ============ PROPWARE: DOKUMENT ============ -->
+    <article class="article" data-article="propware-dokument">
+      <div class="breadcrumb">Propware · Steg 1 av 6</div>
+      <h1>Legg til tinglysingsdokument</h1>
+      <p class="lede">Opprett et nytt dokument fra oppdragssiden i Propware.</p>
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h3>Gå til oppdraget og klikk «Legg til dokument»</h3>
+          <p>Oppdragssiden viser «Dette oppdraget har ingen dokumenter enda.» Klikk <code>Legg til dokument</code> for å åpne typemenyen.</p>
+
+          <div class="step-screenshot">
+            <img src="images/page-15.jpg" alt="Skjermbilde: Legg til dokument-menyen i Propware">
+            <div class="step-caption">Propware: Legg til dokument → velg type</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h3>Velg dokumenttype</h3>
+          <p>Velg typen dokument du skal opprette:</p>
+          <ul>
+            <li><strong>Skjøte</strong> — overføring av hjemmel</li>
+            <li><strong>Hjemmelserklæring</strong> — ved dødsbo</li>
+            <li><strong>Pantedokument fra bank</strong> — se <a href="#" onclick="goTo('propware-pantedokument'); return false;">egen veileder</a></li>
+            <li><strong>Sikring</strong> — se <a href="#" onclick="goTo('propware-sikring'); return false;">egen veileder</a></li>
+            <li><strong>Sletting</strong> — slette tinglyst pant</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout">
+        <div class="callout-title">Utfylling</div>
+        <p>Følg videre flyt i systemet og fyll inn informasjon som mangler. Mye av informasjonen i tinglysingsdokumentet er ofte ferdig utfylt basert på oppgitt informasjon i oppdraget. Du kan likevel redigere og endre data der det er relevant.</p>
+      </div>
+
+      <div class="pagination">
+        <a class="prev" href="#" onclick="goTo('bankid'); return false;">
+          <div class="pagination-label">← Forrige</div>
+          <div class="pagination-title">Logge inn med BankID</div>
+        </a>
+        <a class="next" href="#" onclick="goTo('propware-skjote'); return false;">
+          <div class="pagination-label">Neste →</div>
+          <div class="pagination-title">Send skjøte til signering</div>
+        </a>
+      </div>
+    </article>
+
+    <!-- ============ PROPWARE: SKJØTE ============ -->
+    <article class="article" data-article="propware-skjote">
+      <div class="breadcrumb">Propware · Steg 2 av 6</div>
+      <h1>Send skjøte til signering</h1>
+      <p class="lede">Når skjøtet er opprettet og klart — send det til signering.</p>
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h3>Klikk «Send til signering»</h3>
+          <p>Send tinglysingsdokumentet til signering dersom det ikke er behov for hjelpedokumenter eller signaturer fra personer utenfor oppdraget. Ved behov kan du også forhåndsvise dokumentet før du sender det til signering.</p>
+
+          <div class="step-screenshot">
+            <img src="images/page-16.jpg" alt="Skjermbilde: Skjøte med Send til signering-knapp">
+            <div class="step-caption">Propware: Skjøte lagret — klar til signering</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h3>Følg med på signeringsstatus</h3>
+          <p>Etter innsending vises status som «0 av 3 har signert», «1 av 3 har signert», og til slutt «Alle har signert» når alle parter er ferdige.</p>
+
+          <div class="step-screenshot">
+            <img src="images/page-17.jpg" alt="Skjermbilde: 0 av 3 har signert med tre prikker-meny">
+            <div class="step-caption">Signeringsstatus — og de tre prikkene gir tilgang til flere handlinger</div>
+          </div>
+
+          <div class="step-screenshot">
+            <img src="images/page-18.jpg" alt="Skjermbilde: 1 av 3 har signert">
+            <div class="step-caption">Status oppdateres etterhvert som parter signerer</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pagination">
+        <a class="prev" href="#" onclick="goTo('propware-dokument'); return false;">
+          <div class="pagination-label">← Forrige</div>
+          <div class="pagination-title">Legg til dokument</div>
+        </a>
+        <a class="next" href="#" onclick="goTo('propware-vedlegg'); return false;">
+          <div class="pagination-label">Neste →</div>
+          <div class="pagination-title">Legg til vedlegg</div>
+        </a>
+      </div>
+    </article>
+
+    <!-- ============ PROPWARE: VEDLEGG ============ -->
+    <article class="article" data-article="propware-vedlegg">
+      <div class="breadcrumb">Propware · Steg 3 av 6</div>
+      <h1>Legg til vedlegg</h1>
+      <p class="lede">Dokumenter som krever vedlegg — skifteattest, fullmakt, samtykke — lastes opp via de tre prikkene.</p>
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h3>Klikk på de tre prikkene til høyre for dokumentet</h3>
+          <p>Menyen viser tre valg: <code>Rediger</code>, <code>Vis vedlegg</code>, og <code>Legg til vedlegg</code>.</p>
+
+          <div class="step-screenshot">
+            <img src="images/page-22.jpg" alt="Skjermbilde: Last opp vedlegg-dialog med kategori-dropdown">
+            <div class="step-caption">Dra filen hit eller klikk for å laste opp — velg deretter vedleggskategori</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h3>Velg vedleggskategori og last opp</h3>
+          <p>Velg riktig kategori fra nedtrekksmenyen. Se <a href="#" onclick="goTo('vedleggstyper'); return false;">liste over støttede vedleggstyper</a>.</p>
+        </div>
+      </div>
+
+      <div class="callout">
+        <div class="callout-title">Går til manuell behandling</div>
+        <p>Alle forsendelser med vedlegg vurderes manuelt av en saksbehandler hos Kartverket. Behandlingstiden varierer.</p>
+      </div>
+
+      <div class="pagination">
+        <a class="prev" href="#" onclick="goTo('propware-skjote'); return false;">
+          <div class="pagination-label">← Forrige</div>
+          <div class="pagination-title">Send skjøte til signering</div>
+        </a>
+        <a class="next" href="#" onclick="goTo('propware-tinglys'); return false;">
+          <div class="pagination-label">Neste →</div>
+          <div class="pagination-title">Tinglys signerte dokumenter</div>
+        </a>
+      </div>
+    </article>
+
+    <!-- ============ PROPWARE: TINGLYS ============ -->
+    <article class="article" data-article="propware-tinglys">
+      <div class="breadcrumb">Propware · Steg 4 av 6</div>
+      <h1>Tinglys signerte dokumenter</h1>
+      <p class="lede">Når alle parter har signert, er dokumentet klart for tinglysing hos Kartverket.</p>
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h3>Kryss av dokumentet og klikk «Tinglys valgte»</h3>
+          <p>Når «Alle har signert» vises, krysser du av dokumentet og klikker <code>Tinglys valgte</code>.</p>
+
+          <div class="step-screenshot">
+            <img src="images/page-19.jpg" alt="Skjermbilde: Alle har signert — Tinglys valgte">
+            <div class="step-caption">Når alle har signert, blir Tinglys valgte-knappen aktiv</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h3>Bekreft innsending i dialogen</h3>
+          <p>En dialog åpnes med valg: <code>Send inn</code>, <code>Forhåndsvis</code> eller <code>Avbryt</code>. Klikk <code>Send inn</code> for å sende til Kartverket.</p>
+
+          <div class="step-screenshot">
+            <img src="images/page-20.jpg" alt="Skjermbilde: Tinglys-dialog med Send inn-knapp">
+            <div class="step-caption">Bekreft innsendingen til Kartverket</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h3>Vent på svar fra Kartverket</h3>
+          <p>Forsendelsen er nå sendt inn. Systemet viser «Venter på endelig svar fra Kartverket».</p>
+
+          <div class="step-screenshot">
+            <img src="images/page-21.jpg" alt="Skjermbilde: Forsendelse sendt — venter på svar">
+            <div class="step-caption">Forsendelsen er sendt og venter på Kartverkets behandling</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout blue">
+        <div class="callout-title">Hva skjer videre?</div>
+        <p>Kartverket validerer forsendelsen. Resultatet er alltid ett av tre utfall — se <a href="#" onclick="goTo('valideringsfeil'); return false;">full forklaring</a>.</p>
+      </div>
+
+      <div class="pagination">
+        <a class="prev" href="#" onclick="goTo('propware-vedlegg'); return false;">
+          <div class="pagination-label">← Forrige</div>
+          <div class="pagination-title">Legg til vedlegg</div>
+        </a>
+        <a class="next" href="#" onclick="goTo('propware-pantedokument'); return false;">
+          <div class="pagination-label">Neste →</div>
+          <div class="pagination-title">Pantedokument fra bank</div>
+        </a>
+      </div>
+    </article>
+
+    <!-- ============ PROPWARE: PANTEDOKUMENT ============ -->
+    <article class="article" data-article="propware-pantedokument">
+      <div class="breadcrumb">Propware · Steg 5 av 6</div>
+      <h1>Last opp pantedokument fra bank</h1>
+      <p class="lede">Banken sender et signert pantedokument (<code>pant-signed.sdo</code>) som legges inn i forsendelsen.</p>
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h3>Klikk «Legg til dokument» → «Pantedokument fra bank»</h3>
+          <p>På oppdraget, klikk <code>Legg til dokument</code> og velg <strong>Pantedokument fra bank</strong> fra menyen. En opplastingsdialog åpnes.</p>
+
+          <div class="step-screenshot">
+            <img src="images/page-25.jpg" alt="Skjermbilde: Last opp pantedokument-dialog">
+            <div class="step-caption">Dra <code>pant-signed.sdo</code>-filen hit eller klikk for å laste opp</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h3>Last opp filen fra banken</h3>
+          <p>Filen kommer fra banken og heter typisk <code>pant-signed.sdo</code>. Last den opp og klikk <code>Last opp</code>.</p>
+
+          <div class="step-screenshot">
+            <img src="images/page-26.jpg" alt="Skjermbilde: pant-signed.sdo lastet opp — klar for innsending">
+            <div class="step-caption">Filen er lastet opp og er klar for videre behandling</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout blue">
+        <div class="callout-title">Validering fra Kartverket</div>
+        <p>Når pantedokumentet lastes opp, kjøres det gjennom Kartverkets validering — typiske meldinger er «Mangler signatur fra rettighetshaver» eller «Ikke godkjent: Eier kan ikke avhende». Se <a href="#" onclick="goTo('valideringsfeil'); return false;">full oversikt over valideringsfeil</a>.</p>
+      </div>
+
+      <div class="pagination">
+        <a class="prev" href="#" onclick="goTo('propware-tinglys'); return false;">
+          <div class="pagination-label">← Forrige</div>
+          <div class="pagination-title">Tinglys signerte dokumenter</div>
+        </a>
+        <a class="next" href="#" onclick="goTo('propware-sikring'); return false;">
+          <div class="pagination-label">Neste →</div>
+          <div class="pagination-title">Opprett sikring</div>
+        </a>
+      </div>
+    </article>
+
+    <!-- ============ PROPWARE: SIKRING ============ -->
+    <article class="article" data-article="propware-sikring">
+      <div class="breadcrumb">Propware · Steg 6 av 6</div>
+      <h1>Opprett sikring</h1>
+      <p class="lede">Sikring sperrer eiendommen for videre tinglysing — brukt for eksempel i oppgjørsprosesser.</p>
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h3>Legg til dokument → Sikring</h3>
+          <p>På oppdraget, klikk <code>Legg til dokument</code> og velg <strong>Sikring</strong> fra menyen.</p>
+
+          <div class="step-screenshot">
+            <img src="images/page-29.jpg" alt="Skjermbilde: Legg til dokument → Sikring">
+            <div class="step-caption">Velg Sikring fra dokumenttype-menyen</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h3>Fyll inn pantekrav og rettighetshaver</h3>
+          <p>Oppgi pantekravets beløp, rettighetshaver (typisk oppgjørsselskap), og velg panteobjekter.</p>
+
+          <div class="step-screenshot">
+            <img src="images/page-27.jpg" alt="Skjermbilde: Ny sikring-skjema">
+            <div class="step-caption">Pantekrav, rettighetshaver og panteobjekt i sikringsskjemaet</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h3>Velg personer som skal signere</h3>
+          <p>Under <code>Signeres av</code>, velg hvilke personer som skal signere sikringen.</p>
+
+          <div class="step-screenshot">
+            <img src="images/page-28.jpg" alt="Skjermbilde: Signeres av — Velg personer">
+            <div class="step-caption">Klikk «Velg personer» for å legge til signatarer</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h3>Send til signering og tinglys</h3>
+          <p>Når sikringen er klar, send den til signering og deretter til tinglysing på samme måte som et skjøte.</p>
+
+          <div class="step-screenshot">
+            <img src="images/page-30.jpg" alt="Skjermbilde: Sikring klar for Send til signering">
+            <div class="step-caption">Sikring lagret — klikk Send til signering</div>
+          </div>
+
+          <div class="step-screenshot">
+            <img src="images/page-31.jpg" alt="Skjermbilde: Alle har signert — Tinglys valgte → Send inn">
+            <div class="step-caption">Etter signering: Tinglys valgte → Send inn</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pagination">
+        <a class="prev" href="#" onclick="goTo('propware-pantedokument'); return false;">
+          <div class="pagination-label">← Forrige</div>
+          <div class="pagination-title">Pantedokument fra bank</div>
+        </a>
+        <a class="next" href="#" onclick="goTo('valideringsfeil'); return false;">
+          <div class="pagination-label">Neste →</div>
+          <div class="pagination-title">Valideringsfeil</div>
+        </a>
+      </div>
+    </article>
+
+    <!-- ============ REFERANSE: VALIDERINGSFEIL ============ -->
+    <article class="article" data-article="valideringsfeil">
+      <div class="breadcrumb">Referanse</div>
+      <h1>Valideringsfeil fra Kartverket</h1>
+      <p class="lede">Alle valideringsfeil som vises i tinglysingsdokumentet kommer direkte fra Kartverket.</p>
+
+      <p>Kontrollen skjer i Kartverkets systemer, og vi viser tilbakemeldingene deres. Valideringsfeilene betyr at Kartverket har funnet mangler eller feil i dokumentet. Disse må leses og rettes før dokumentet sendes til signering.</p>
+
+      <div class="callout">
+        <div class="callout-title">Viktig</div>
+        <p>Et ferdig signert tinglysingsdokument kan ikke endres. Les alltid valideringsmeldingene nøye før du sender dokumentet til signering.</p>
+      </div>
+
+      <h2>Tre mulige utfall</h2>
+      <p>Når forsendelsen sendes inn, er resultatet alltid ett av disse tre:</p>
+
+      <div class="outcomes">
+        <div class="outcome red">
+          <span class="outcome-pill">AVVIST</span>
+          <h4>«Sjansen er stor for at forsendelsen vil avvises…»</h4>
+          <ul>
+            <li>Stoppes automatisk i Kartverkets systemer</li>
+            <li>Ingen saksbehandler vurderer forsendelsen</li>
+            <li>Registreres ikke i grunnboken</li>
+          </ul>
+        </div>
+        <div class="outcome amber">
+          <span class="outcome-pill">MANUELL</span>
+          <h4>«…vil gå til manuell behandling…»</h4>
+          <ul>
+            <li>Vurderes av saksbehandler hos Kartverket</li>
+            <li>Behandlingstid varierer etter kapasitet</li>
+            <li>Utfall avgjøres etter manuell vurdering</li>
+          </ul>
+        </div>
+        <div class="outcome green">
+          <span class="outcome-pill">GODKJENT</span>
+          <h4>Ingen feil — dokumentet er korrekt utfylt</h4>
+          <ul>
+            <li>Godkjennes automatisk ved innsending</li>
+            <li>Tinglyses i løpet av sekunder</li>
+            <li>Ingenting mer å gjøre</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout blue">
+        <div class="callout-title">Unntak fra avvisning</div>
+        <p>Dokumenter som ellers ville blitt avvist, kan likevel behandles dersom forsendelsen inneholder et annet dokument som utløser manuell behandling først — for eksempel en hjemmelserklæring.</p>
+      </div>
+
+      <h2>Hva gjør du ved avvisning?</h2>
+      <p>Dersom forsendelsen blir avvist og ikke registreres i grunnboken, får du en detaljert forklaring fra Kartverket på hva som manglet eller var feil. Rett opp i feilene og send inn på nytt.</p>
+
+      <p>Spørsmål om utfylling eller krav til dokumentasjon må rettes til Kartverket direkte. Se <a href="#" onclick="goTo('kontakt'); return false;">kontaktinformasjon</a>.</p>
+
+      <div class="pagination">
+        <a class="prev" href="#" onclick="goTo('propware-sikring'); return false;">
+          <div class="pagination-label">← Forrige</div>
+          <div class="pagination-title">Opprett sikring</div>
+        </a>
+        <a class="next" href="#" onclick="goTo('vedleggstyper'); return false;">
+          <div class="pagination-label">Neste →</div>
+          <div class="pagination-title">Støttede vedleggstyper</div>
+        </a>
+      </div>
+    </article>
+
+    <!-- ============ REFERANSE: VEDLEGG ============ -->
+    <article class="article" data-article="vedleggstyper">
+      <div class="breadcrumb">Referanse</div>
+      <h1>Støttede vedleggstyper</h1>
+      <p class="lede">Vi støtter alle vedleggskategorier Kartverket har åpnet for.</p>
+
+      <p>Når et dokument krever vedlegg, velger du kategori fra nedtrekksmenyen i opplastingsdialogen. Se <a href="#" onclick="goTo('propware-vedlegg'); return false;">hvordan du laster opp vedlegg</a>.</p>
+
+      <h2>Alle støttede kategorier</h2>
+      <ul>
+        <li><strong>Skifteattest, uskifteattest og bostyrerattest</strong> — ved dødsboskifte</li>
+        <li><strong>Skiftefullmakt</strong></li>
+        <li><strong>Testament og ektepakt</strong> ved dødsboskifte</li>
+        <li><strong>Gjensidig testament</strong></li>
+        <li><strong>Begrunnelse for dokumentavgift</strong></li>
+        <li><strong>Salgsfullmakt</strong></li>
+        <li><strong>Kjøpsfullmakt</strong></li>
+        <li><strong>Samtykke fra rettighetshaver til urådighet</strong></li>
+        <li><strong>Samtykke fra bortfester</strong></li>
+        <li><strong>Annet</strong></li>
+      </ul>
+
+      <div class="callout">
+        <div class="callout-title">Forsendelser med vedlegg</div>
+        <p>Alle forsendelser med vedlegg går automatisk til manuell behandling hos Kartverket. Behandlingstiden avhenger av Kartverkets kapasitet.</p>
+      </div>
+
+      <div class="pagination">
+        <a class="prev" href="#" onclick="goTo('valideringsfeil'); return false;">
+          <div class="pagination-label">← Forrige</div>
+          <div class="pagination-title">Valideringsfeil</div>
+        </a>
+        <a class="next" href="#" onclick="goTo('kontakt'); return false;">
+          <div class="pagination-label">Neste →</div>
+          <div class="pagination-title">Hjelp og kontakt</div>
+        </a>
+      </div>
+    </article>
+
+    <!-- ============ KONTAKT ============ -->
+    <article class="article" data-article="kontakt">
+      <div class="breadcrumb">Referanse</div>
+      <h1>Hjelp og kontakt</h1>
+      <p class="lede">To kilder, avhengig av hva du trenger svar på.</p>
+
+      <div class="contact-grid">
+        <div class="contact-card">
+          <h3>Kartverket</h3>
+          <div class="desc">For utfylling, krav til dokumentasjon, og avviste forsendelser.</div>
+          <div class="primary"><a href="tel:32118000">32 11 80 00</a></div>
+          <div class="when"><strong>Ring hit når</strong> du lurer på hvordan et dokument skal fylles ut riktig, eller når en forsendelse er blitt avvist og du trenger detaljer om hvorfor.</div>
+        </div>
+        <div class="contact-card">
+          <img src="images/logo-ab.png" alt="A → B" class="logo-mini">
+          <h3>Alice &amp; Bob</h3>
+          <div class="desc">For tekniske spørsmål om tinglysingsmotoren og integrasjonen med fagsystemet ditt.</div>
+          <div class="primary"><a href="mailto:marte@alice-bob.no">marte@alice-bob.no</a></div>
+          <div class="primary" style="font-size: 16px; margin-top: -8px;"><a href="tel:93215150">932 15 150</a></div>
+          <div class="when"><strong>Kontakt oss</strong> hvis noe ikke oppfører seg som forventet i tinglysingsmotoren, eller hvis du trenger hjelp med integrasjonen mot Vitec eller Propware.</div>
+        </div>
+      </div>
+
+      <div class="pagination">
+        <a class="prev" href="#" onclick="goTo('vedleggstyper'); return false;">
+          <div class="pagination-label">← Forrige</div>
+          <div class="pagination-title">Støttede vedleggstyper</div>
+        </a>
+        <a class="next disabled" href="#">
+          <div class="pagination-label">Siste side</div>
+          <div class="pagination-title">&nbsp;</div>
+        </a>
+      </div>
+    </article>
+
+    <!-- ============ SEARCH RESULTS ============ -->
+    <article class="article" data-article="search">
+      <div class="breadcrumb">Søkeresultater</div>
+      <h1 id="searchHeader">Søkeresultater</h1>
+      <div id="searchResults"></div>
+    </article>
+
+  </main>
+</div>
+
+<script>
+// Søke-index — tittel, beskrivelse, artikkel-id, nøkkelord
+const SEARCH_INDEX = [
+  { id: 'oversikt', title: 'Hva er elektronisk tinglysing?', desc: 'Oversikt over hvordan systemet fungerer', keywords: 'oversikt intro tinglysing hva er grunnboken' },
+  { id: 'vitec-bestille', title: 'Bestill Alice & Bob-tjeneste', desc: 'Vitec Next: Aktiver e-tinglysing på et oppdrag', keywords: 'vitec bestille tjeneste marked aktivere' },
+  { id: 'vitec-dokumenter', title: 'Velg dokument i Vitec', desc: 'Legg til skjøte, hjemmelserklæring, pantedokument', keywords: 'vitec legg til dokument skjøte hjemmelserklæring pantedokument sikring sletting' },
+  { id: 'vitec-skjote', title: 'Opprett et nytt skjøte i Vitec', desc: 'Fyll inn felter og rediger data', keywords: 'vitec skjøte nytt opprette fylle ut rediger' },
+  { id: 'vitec-valideringsfeil', title: 'Lagring med valideringsfeil', desc: 'Lagre selv med feil fra Kartverket', keywords: 'vitec lagre valideringsfeil kartverket huk av avkrysning' },
+  { id: 'vitec-signering', title: 'Send skjøte til signering (Vitec)', desc: 'Send dokument til signering, selgers portal', keywords: 'vitec send signering selger portal bankid vedlegg' },
+  { id: 'altinn-tilganger', title: 'Altinn-tilganger (AFPANT)', desc: 'Delegér rettigheter til Alice & Bob AS', keywords: 'altinn afpant tilganger rettigheter kartverket førstegangsoppsett organisasjon 931686054 4752 digital samhandling eiendomshandel' },
+  { id: 'bankid', title: 'Logg inn med BankID', desc: 'Innlogging og autentisering', keywords: 'bankid innlogging logg inn autentisering sikkerhet' },
+  { id: 'propware-dokument', title: 'Legg til dokument i Propware', desc: 'Start et nytt tinglysingsdokument', keywords: 'propware legg til dokument skjøte hjemmelserklæring pantedokument sikring sletting' },
+  { id: 'propware-skjote', title: 'Send skjøte til signering (Propware)', desc: 'Send til signering og følg status', keywords: 'propware skjøte send signering status 0 av 3 alle har signert' },
+  { id: 'propware-vedlegg', title: 'Legg til vedlegg i Propware', desc: 'Last opp skifteattest, fullmakt, samtykke', keywords: 'propware vedlegg last opp skifteattest fullmakt samtykke kategori tre prikker' },
+  { id: 'propware-tinglys', title: 'Tinglys signerte dokumenter', desc: 'Send til Kartverket når alt er signert', keywords: 'propware tinglys valgte send inn kartverket venter svar forsendelse' },
+  { id: 'propware-pantedokument', title: 'Pantedokument fra bank', desc: 'Last opp pant-signed.sdo fra banken', keywords: 'propware pantedokument bank sdo pant-signed last opp' },
+  { id: 'propware-sikring', title: 'Opprett sikring', desc: 'Sperre eiendommen for videre tinglysing', keywords: 'propware sikring sperre pantekrav rettighetshaver panteobjekt oppgjør' },
+  { id: 'valideringsfeil', title: 'Valideringsfeil fra Kartverket', desc: 'De tre utfallene — avvist, manuell, godkjent', keywords: 'valideringsfeil kartverket avvist manuell godkjent utfall feil' },
+  { id: 'vedleggstyper', title: 'Støttede vedleggstyper', desc: 'Full liste over vedleggskategorier', keywords: 'vedlegg kategori skifteattest uskifteattest bostyrerattest testament ektepakt fullmakt samtykke' },
+  { id: 'kontakt', title: 'Hjelp og kontakt', desc: 'Kartverket og Alice & Bob', keywords: 'kontakt hjelp telefon epost kartverket alice bob marte' }
+];
+
+let currentArticle = 'home';
+
+function goTo(articleId) {
+  document.querySelectorAll('.article').forEach(a => a.classList.remove('active'));
+  const target = document.querySelector(`.article[data-article="${articleId}"]`);
+  if (target) target.classList.add('active');
+
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const navItem = document.querySelector(`.nav-item[data-article="${articleId}"]`);
+  if (navItem) navItem.classList.add('active');
+
+  currentArticle = articleId;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  if (window.innerWidth <= 900) {
+    document.getElementById('sidebar').classList.remove('open');
+  }
+
+  // Oppdater URL (uten å reloade)
+  if (articleId !== 'home') {
+    history.replaceState(null, '', '#' + articleId);
+  } else {
+    history.replaceState(null, '', window.location.pathname);
+  }
+}
+
+function doSearch() {
+  const q = document.getElementById('searchInput').value.trim().toLowerCase();
+  if (!q) {
+    if (currentArticle === 'search') goTo('home');
+    return;
+  }
+
+  const hits = SEARCH_INDEX.filter(item => {
+    const hay = (item.title + ' ' + item.desc + ' ' + item.keywords).toLowerCase();
+    return hay.includes(q);
+  });
+
+  const resultsEl = document.getElementById('searchResults');
+  const headerEl = document.getElementById('searchHeader');
+  headerEl.textContent = hits.length ? `${hits.length} treff for «${q}»` : `Ingen treff for «${q}»`;
+
+  if (hits.length === 0) {
+    resultsEl.innerHTML = '<p>Prøv et annet søkeord, eller bruk menyen til venstre.</p>';
+  } else {
+    resultsEl.innerHTML = '<div class="topic-grid">' + hits.map(h =>
+      `<a class="topic-card" href="#" onclick="goTo('${h.id}'); return false;">
+        <div class="topic-card-title">${h.title}</div>
+        <div class="topic-card-desc">${h.desc}</div>
+      </a>`
+    ).join('') + '</div>';
+  }
+
+  goTo('search');
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+// Sjekk om det er en anchor i URL-en ved lasting
+window.addEventListener('DOMContentLoaded', () => {
+  const hash = window.location.hash.slice(1);
+  if (hash && document.querySelector(`.article[data-article="${hash}"]`)) {
+    goTo(hash);
+  }
+});
+
+// Støtte for tilbake-knappen i nettleseren
+window.addEventListener('hashchange', () => {
+  const hash = window.location.hash.slice(1) || 'home';
+  if (document.querySelector(`.article[data-article="${hash}"]`)) {
+    goTo(hash);
+  }
+});
+
+// Tastatur-snarveier
+document.addEventListener('keydown', (e) => {
+  if (e.key === '/' && document.activeElement !== document.getElementById('searchInput')) {
+    e.preventDefault();
+    document.getElementById('searchInput').focus();
+  }
+  if (e.key === 'Escape') {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('searchInput').blur();
+  }
+});
+</script>
+
+</body>
+</html>
