@@ -3,16 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hjelpesenter · Elektronisk tinglysing · Alice &amp; Bob</title>
+<title>Onboarding · Elektronisk tinglysing · Alice &amp; Bob</title>
 <style>
   :root {
     --ink: #1A1A1A;
     --paper: #FFFFFF;
     --cream: #FAF7F2;
     --muted: #6B6963;
-    --muted-soft: #9C9A92;
     --border: #E5E2D9;
-    --border-soft: #F0EEE7;
     --accent: #2A4D3E;
     --red: #B83A3A;
     --red-bg: #F8EDED;
@@ -38,223 +36,511 @@
     min-height: 100vh;
   }
 
-  a { color: var(--ink); }
-
-  /* ============ Layout ============ */
-  .layout {
-    display: grid;
-    grid-template-columns: 280px 1fr;
-    min-height: 100vh;
+  .app {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 20px 80px;
   }
 
-  @media (max-width: 900px) {
-    .layout { grid-template-columns: 1fr; }
-    .sidebar { display: none; }
-    .sidebar.open { display: block; position: fixed; inset: 0; z-index: 10; background: var(--cream); overflow-y: auto; }
-  }
-
-  /* ============ Sidebar ============ */
-  .sidebar {
-    border-right: 1px solid var(--border);
-    background: var(--paper);
-    padding: 24px 0;
-    position: sticky;
-    top: 0;
-    height: 100vh;
-    overflow-y: auto;
-  }
-
-  .sidebar-header {
-    padding: 0 24px 20px;
+  /* ============ Header ============ */
+  .brand {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 32px;
+    padding-bottom: 20px;
     border-bottom: 1px solid var(--border);
-    margin-bottom: 20px;
   }
 
-  .sidebar-logo {
-    height: 22px;
-    width: auto;
+  .brand-mark {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .ab-pair {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .ab-circle {
+    width: 32px;
+    height: 32px;
+    border: 1.5px solid var(--ink);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--title-font);
+    font-weight: 700;
+    font-size: 16px;
+    background: var(--paper);
+  }
+
+  .ab-arrow {
+    width: 18px;
+    height: 1.5px;
+    background: var(--ink);
+    position: relative;
+  }
+
+  .ab-arrow::after {
+    content: "";
+    position: absolute;
+    right: -1px;
+    top: -3px;
+    width: 0;
+    height: 0;
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    border-left: 6px solid var(--ink);
+  }
+
+  .brand-name {
+    font-family: var(--title-font);
+    font-size: 14px;
+    letter-spacing: 2px;
+    color: var(--muted);
+  }
+
+  .progress {
+    font-size: 13px;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ============ Hero ============ */
+  .hero {
+    margin: 40px 0 48px;
+  }
+
+  .hero h1 {
+    font-family: var(--title-font);
+    font-size: 54px;
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+  }
+
+  .hero p {
+    font-family: var(--body-font);
+    font-style: italic;
+    font-size: 20px;
+    color: var(--muted);
+  }
+
+  /* ============ Stepper nav ============ */
+  .stepper {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+  }
+
+  .step-dot {
+    flex: 1;
+    min-width: 100px;
+    padding: 14px 16px;
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+    font-family: var(--body-font);
+    font-size: 13px;
+    text-align: left;
+    color: var(--muted);
+  }
+
+  .step-dot:hover {
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+
+  .step-dot.active {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+
+  .step-dot.done {
+    color: var(--ink);
+    border-color: var(--ink);
+  }
+
+  .step-num {
+    font-family: var(--title-font);
+    font-style: italic;
+    font-size: 11px;
+    opacity: 0.7;
     display: block;
+    margin-bottom: 2px;
+  }
+
+  .step-label {
+    font-weight: 600;
+    font-size: 13px;
+    line-height: 1.25;
+  }
+
+  /* ============ Panels ============ */
+  .panel {
+    display: none;
+    background: var(--paper);
+    border: 1px solid var(--border);
+    padding: 48px 56px;
+    min-height: 500px;
+    animation: fadeIn 0.25s ease-out;
+  }
+
+  .panel.active {
+    display: block;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .panel h2 {
+    font-family: var(--title-font);
+    font-size: 34px;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 12px;
+  }
+
+  .panel .lede {
+    font-style: italic;
+    color: var(--muted);
+    font-size: 17px;
+    margin-bottom: 32px;
+  }
+
+  .panel h3 {
+    font-family: var(--body-font);
+    font-size: 15px;
+    font-weight: 600;
+    margin: 24px 0 12px;
+    color: var(--ink);
+  }
+
+  .panel p {
+    margin-bottom: 14px;
+    color: var(--muted);
+  }
+
+  .panel p.lead {
+    color: var(--ink);
+    font-weight: 600;
     margin-bottom: 8px;
   }
 
-  .sidebar-title {
-    font-size: 11px;
-    color: var(--muted);
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
+  /* ============ Two-column layouts ============ */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: start;
   }
 
-  .search-wrap {
-    padding: 0 24px 20px;
+  @media (max-width: 720px) {
+    .two-col { grid-template-columns: 1fr; gap: 32px; }
+    .panel { padding: 32px 24px; }
+    .hero h1 { font-size: 36px; }
   }
 
-  .search-input {
-    width: 100%;
-    padding: 10px 14px;
-    border: 1px solid var(--border);
-    background: var(--cream);
-    font-family: var(--body-font);
-    font-size: 14px;
-    color: var(--ink);
-    border-radius: 2px;
+  /* ============ Alice-Bob-Kartverket diagram ============ */
+  .ab-diagram {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px;
   }
 
-  .search-input:focus {
-    outline: none;
-    border-color: var(--ink);
-    background: var(--paper);
-  }
-
-  .search-input::placeholder { color: var(--muted); }
-
-  .nav-section {
-    padding: 0 0 8px;
-  }
-
-  .nav-section-title {
-    padding: 12px 24px 6px;
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--muted);
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-  }
-
-  .nav-item {
-    display: block;
-    padding: 8px 24px 8px 36px;
-    font-size: 14px;
-    color: var(--muted);
-    text-decoration: none;
-    border-left: 2px solid transparent;
-    cursor: pointer;
-    transition: color 0.1s, border-color 0.1s, background 0.1s;
-  }
-
-  .nav-item:hover {
-    color: var(--ink);
-    background: var(--border-soft);
-  }
-
-  .nav-item.active {
-    color: var(--ink);
-    font-weight: 600;
-    border-left-color: var(--ink);
-    background: var(--border-soft);
-  }
-
-  .nav-item-num {
-    display: inline-block;
-    width: 20px;
-    color: var(--muted-soft);
-    font-variant-numeric: tabular-nums;
-    font-size: 12px;
-  }
-
-  /* ============ Main content ============ */
-  .main {
-    padding: 48px 64px 120px;
-    max-width: 900px;
-  }
-
-  @media (max-width: 900px) {
-    .main { padding: 32px 24px 80px; }
-  }
-
-  .mobile-menu-btn {
-    display: none;
-    margin-bottom: 24px;
-    padding: 8px 14px;
-    border: 1px solid var(--ink);
-    background: var(--paper);
-    font-family: var(--body-font);
-    font-size: 13px;
-    cursor: pointer;
-    border-radius: 2px;
-  }
-
-  @media (max-width: 900px) {
-    .mobile-menu-btn { display: inline-block; }
-  }
-
-  /* ============ Breadcrumb ============ */
-  .breadcrumb {
-    font-size: 12px;
-    color: var(--muted);
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-bottom: 12px;
-  }
-
-  /* ============ Article ============ */
-  .article {
-    display: none;
-  }
-
-  .article.active { display: block; }
-
-  .article h1 {
-    font-family: var(--title-font);
-    font-size: 40px;
-    font-weight: 700;
-    line-height: 1.1;
-    letter-spacing: -0.01em;
-    margin-bottom: 12px;
-  }
-
-  .article .lede {
-    font-size: 18px;
-    color: var(--muted);
-    font-style: italic;
-    margin-bottom: 40px;
-    padding-bottom: 24px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .article h2 {
-    font-family: var(--title-font);
-    font-size: 26px;
-    font-weight: 700;
-    line-height: 1.2;
-    margin: 48px 0 16px;
-  }
-
-  .article h3 {
-    font-size: 16px;
-    font-weight: 600;
-    margin: 24px 0 8px;
-  }
-
-  .article p {
+  .ab-flow {
+    display: flex;
+    align-items: center;
+    gap: 16px;
     margin-bottom: 16px;
+  }
+
+  .ab-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .ab-big-circle {
+    width: 68px;
+    height: 68px;
+    border: 2px solid var(--ink);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--title-font);
+    font-weight: 700;
+    font-size: 32px;
+    background: var(--paper);
+  }
+
+  .ab-doc {
+    width: 68px;
+    height: 68px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ab-doc svg {
+    width: 44px;
+    height: 44px;
+    stroke: var(--ink);
+    fill: none;
+    stroke-width: 2.5;
+  }
+
+  .ab-label {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .ab-line-arrow {
+    width: 40px;
+    height: 2px;
+    background: var(--ink);
+    position: relative;
+    margin-top: -24px;
+  }
+
+  .ab-line-arrow::after {
+    content: "";
+    position: absolute;
+    right: -2px;
+    top: -4px;
+    width: 0;
+    height: 0;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 8px solid var(--ink);
+  }
+
+  .ab-down-arrow {
+    width: 2px;
+    height: 32px;
+    background: var(--ink);
+    position: relative;
+    margin: 12px 0;
+  }
+
+  .ab-down-arrow::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: -4px;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 8px solid var(--ink);
+  }
+
+  .ab-box {
+    background: var(--gray-bg);
+    border: 1px solid var(--border);
+    padding: 14px 20px;
+    min-width: 260px;
+    text-align: center;
+  }
+
+  .ab-box-title {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+
+  .ab-box-sub {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  /* ============ Outcome cards ============ */
+  .outcomes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin: 24px 0;
+  }
+
+  @media (max-width: 720px) {
+    .outcomes { grid-template-columns: 1fr; }
+  }
+
+  .outcome {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    padding: 20px;
+    cursor: pointer;
+    transition: border-color 0.15s, transform 0.15s;
+  }
+
+  .outcome:hover {
+    border-color: var(--ink);
+    transform: translateY(-2px);
+  }
+
+  .outcome-pill {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 2px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 16px;
+  }
+
+  .outcome-red .outcome-pill { background: var(--red-bg); color: var(--red); }
+  .outcome-amber .outcome-pill { background: var(--amber-bg); color: var(--amber); }
+  .outcome-green .outcome-pill { background: var(--green-bg); color: var(--green); }
+
+  .outcome-icon {
+    width: 32px;
+    height: 32px;
+    margin-bottom: 14px;
+  }
+
+  .outcome-icon svg {
+    width: 100%;
+    height: 100%;
+    stroke-width: 2.5;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .outcome-red .outcome-icon svg { stroke: var(--red); }
+  .outcome-amber .outcome-icon svg { stroke: var(--amber); }
+  .outcome-green .outcome-icon svg { stroke: var(--green); }
+
+  .outcome h4 {
+    font-size: 17px;
+    margin-bottom: 14px;
     color: var(--ink);
   }
 
-  .article ul, .article ol {
-    margin: 0 0 20px 24px;
+  .outcome ul {
+    list-style: none;
     padding: 0;
   }
 
-  .article li {
+  .outcome li {
+    font-size: 13px;
+    color: var(--muted);
+    padding: 3px 0;
+    padding-left: 14px;
+    position: relative;
+  }
+
+  .outcome li::before {
+    content: "·";
+    position: absolute;
+    left: 4px;
+    font-weight: 700;
+    color: var(--muted);
+  }
+
+  /* ============ Callouts ============ */
+  .callout {
+    background: var(--amber-bg);
+    border-left: 3px solid var(--amber);
+    padding: 16px 20px;
+    margin: 20px 0;
+  }
+
+  .callout.blue { background: var(--blue-bg); border-left-color: var(--blue); }
+  .callout.gray { background: var(--gray-bg); border-left-color: var(--muted); }
+
+  .callout-title {
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .callout.amber .callout-title,
+  .callout:not(.blue):not(.gray) .callout-title { color: var(--amber); }
+  .callout.blue .callout-title { color: var(--blue); }
+  .callout.gray .callout-title { color: var(--ink); }
+
+  .callout p { margin: 0; color: var(--ink); font-size: 14px; }
+
+  /* ============ Important rule (panel 4) ============ */
+  .big-rule {
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+    padding: 32px 0;
+  }
+
+  .big-rule-icon {
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
+  }
+
+  .big-rule-icon svg {
+    width: 100%;
+    height: 100%;
+    stroke: var(--amber);
+    fill: none;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .big-rule-text {
+    flex: 1;
+  }
+
+  .big-rule-text h3 {
+    font-family: var(--title-font);
+    font-size: 28px;
+    font-weight: 400;
+    line-height: 1.2;
     margin-bottom: 8px;
-    padding-left: 4px;
+    color: var(--ink);
   }
 
-  /* ============ Step layout ============ */
-  .step {
-    display: grid;
-    grid-template-columns: 48px 1fr;
+  .big-rule-text .highlight {
+    font-family: var(--title-font);
+    font-style: italic;
+    font-weight: 700;
+    color: var(--amber);
+  }
+
+  .big-rule-text p {
+    margin-top: 16px;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  /* ============ Numbered doc flow ============ */
+  .doc-flow-item {
+    display: flex;
     gap: 20px;
-    margin-bottom: 40px;
-    padding-bottom: 40px;
-    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
+    padding: 14px 0;
   }
 
-  .step:last-child { border-bottom: none; }
-
-  .step-num {
-    width: 40px;
-    height: 40px;
+  .doc-num {
+    width: 36px;
+    height: 36px;
     background: var(--ink);
     color: var(--paper);
     border-radius: 50%;
@@ -263,237 +549,89 @@
     justify-content: center;
     font-family: var(--title-font);
     font-weight: 700;
-    font-size: 18px;
+    font-size: 16px;
     flex-shrink: 0;
   }
 
-  .step-content h3 {
-    font-family: var(--title-font);
-    font-size: 22px;
-    font-weight: 700;
-    margin: 0 0 12px;
-    line-height: 1.3;
+  .doc-info h4 {
+    font-size: 16px;
+    margin-bottom: 4px;
   }
 
-  .step-screenshot {
-    margin-top: 20px;
-    border: 1px solid var(--border);
-    background: var(--paper);
-    border-radius: 2px;
-    overflow: hidden;
-  }
-
-  .step-screenshot img {
-    display: block;
-    width: 100%;
-    height: auto;
-  }
-
-  .step-caption {
-    font-size: 12px;
+  .doc-info p {
+    font-size: 14px;
     color: var(--muted);
-    font-style: italic;
-    padding: 8px 12px;
-    background: var(--gray-bg);
-    border-top: 1px solid var(--border);
+    margin: 0;
   }
 
-  /* ============ Callouts ============ */
-  .callout {
-    margin: 20px 0;
-    padding: 16px 20px;
-    border-left: 3px solid var(--amber);
-    background: var(--amber-bg);
-  }
-
-  .callout.blue { background: var(--blue-bg); border-left-color: var(--blue); }
-  .callout.gray { background: var(--gray-bg); border-left-color: var(--muted); }
-  .callout.red { background: var(--red-bg); border-left-color: var(--red); }
-  .callout.green { background: var(--green-bg); border-left-color: var(--green); }
-
-  .callout-title {
-    font-weight: 700;
-    font-size: 12px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    margin-bottom: 6px;
-  }
-
-  .callout:not(.blue):not(.gray):not(.red):not(.green) .callout-title { color: var(--amber); }
-  .callout.blue .callout-title { color: var(--blue); }
-  .callout.gray .callout-title { color: var(--ink); }
-  .callout.red .callout-title { color: var(--red); }
-  .callout.green .callout-title { color: var(--green); }
-
-  .callout p { margin: 0; font-size: 14px; color: var(--ink); }
-  .callout p + p { margin-top: 8px; }
-
-  /* ============ Welcome / home ============ */
-  .welcome-hero {
+  /* ============ Vedlegg grid ============ */
+  .vedlegg-grid {
     display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 32px;
-    align-items: center;
-    margin-bottom: 48px;
-    padding-bottom: 32px;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 24px;
+    margin: 16px 0;
+  }
+
+  .vedlegg-grid div {
+    padding: 6px 0;
+    padding-left: 16px;
+    position: relative;
+    font-size: 14px;
+  }
+
+  .vedlegg-grid div::before {
+    content: "—";
+    position: absolute;
+    left: 0;
+    color: var(--muted);
+  }
+
+  /* ============ Req list (urådighet) ============ */
+  .req-list {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    padding: 24px;
+  }
+
+  .req-item {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    padding: 12px 0;
     border-bottom: 1px solid var(--border);
   }
 
-  @media (max-width: 720px) {
-    .welcome-hero { grid-template-columns: 1fr; }
+  .req-item:last-child { border-bottom: none; }
+
+  .req-icon {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+    margin-top: 2px;
   }
 
-  .welcome-text h1 {
-    font-family: var(--title-font);
-    font-size: 44px;
-    font-weight: 700;
-    line-height: 1.1;
-    letter-spacing: -0.01em;
-    margin-bottom: 12px;
+  .req-icon svg {
+    width: 100%;
+    height: 100%;
+    stroke: var(--ink);
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
 
-  .welcome-text p {
-    font-size: 18px;
-    color: var(--muted);
-    font-style: italic;
-  }
-
-  .welcome-illustration img {
-    height: 120px;
-    width: auto;
-    image-rendering: pixelated;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: crisp-edges;
-  }
-
-  .topic-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 16px;
-    margin-bottom: 48px;
-  }
-
-  .topic-card {
-    padding: 20px 22px;
-    background: var(--paper);
-    border: 1px solid var(--border);
-    border-radius: 2px;
-    cursor: pointer;
-    transition: border-color 0.15s, transform 0.15s;
-    text-decoration: none;
-    color: inherit;
-    display: block;
-  }
-
-  .topic-card:hover {
-    border-color: var(--ink);
-    transform: translateY(-2px);
-  }
-
-  .topic-card-num {
-    font-family: var(--title-font);
-    font-style: italic;
-    font-size: 13px;
-    color: var(--muted);
-    margin-bottom: 4px;
-    display: block;
-  }
-
-  .topic-card-title {
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 4px;
-    color: var(--ink);
-  }
-
-  .topic-card-desc {
-    font-size: 13px;
-    color: var(--muted);
-  }
-
-  /* FAQ quick-reference cards */
-  .faq-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 12px;
-    margin: 24px 0 48px;
-  }
-
-  .faq-card {
-    padding: 16px;
-    background: var(--paper);
-    border: 1px solid var(--border);
-    border-radius: 2px;
-    cursor: pointer;
-    text-decoration: none;
-    color: inherit;
-    display: block;
-    transition: border-color 0.15s;
-  }
-
-  .faq-card:hover { border-color: var(--ink); }
-
-  .faq-card-pill {
-    display: inline-block;
-    padding: 3px 8px;
-    border-radius: 2px;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    margin-bottom: 8px;
-  }
-
-  .faq-card.red .faq-card-pill { background: var(--red-bg); color: var(--red); }
-  .faq-card.amber .faq-card-pill { background: var(--amber-bg); color: var(--amber); }
-  .faq-card.green .faq-card-pill { background: var(--green-bg); color: var(--green); }
-
-  .faq-card-title { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
-  .faq-card-desc { font-size: 12px; color: var(--muted); }
-
-  /* ============ Pagination ============ */
-  .pagination {
-    display: flex;
-    justify-content: space-between;
-    align-items: stretch;
-    margin-top: 56px;
-    padding-top: 24px;
-    border-top: 1px solid var(--border);
-    gap: 16px;
-  }
-
-  .pagination a {
-    flex: 1;
-    padding: 14px 18px;
-    border: 1px solid var(--border);
-    background: var(--paper);
-    text-decoration: none;
-    color: inherit;
-    display: block;
-    transition: border-color 0.15s;
-    border-radius: 2px;
-  }
-
-  .pagination a:hover { border-color: var(--ink); }
-
-  .pagination a.prev { text-align: left; }
-  .pagination a.next { text-align: right; }
-  .pagination a.disabled { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
-
-  .pagination-label {
-    font-size: 11px;
-    color: var(--muted);
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-bottom: 4px;
-  }
-
-  .pagination-title {
+  .req-body h4 {
     font-size: 14px;
-    font-weight: 600;
-    color: var(--ink);
+    margin-bottom: 2px;
   }
 
-  /* ============ Contact section ============ */
+  .req-body p {
+    font-size: 13px;
+    color: var(--muted);
+    margin: 0;
+  }
+
+  /* ============ Contact cards (panel 7) ============ */
   .contact-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -506,967 +644,396 @@
   }
 
   .contact-card {
-    padding: 28px;
     background: var(--paper);
     border: 1px solid var(--border);
-    border-radius: 2px;
+    padding: 28px;
+  }
+
+  .contact-icon {
+    width: 36px;
+    height: 36px;
+    margin-bottom: 16px;
+  }
+
+  .contact-icon svg {
+    width: 100%;
+    height: 100%;
+    stroke: var(--ink);
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
 
   .contact-card h3 {
     font-family: var(--title-font);
-    font-size: 22px;
+    font-size: 24px;
+    margin: 4px 0 6px;
     font-weight: 700;
-    margin-top: 8px;
-    margin-bottom: 4px;
   }
 
-  .contact-card .primary {
+  .contact-desc {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+
+  .contact-primary {
     font-family: var(--title-font);
-    font-size: 22px;
+    font-size: 26px;
     font-weight: 700;
     color: var(--accent);
-    margin: 12px 0;
+    margin-bottom: 14px;
   }
 
-  .contact-card .primary a { color: inherit; text-decoration: none; }
-  .contact-card .primary a:hover { text-decoration: underline; }
+  .contact-when {
+    font-size: 13px;
+  }
 
-  .contact-card .logo-mini {
-    height: 22px;
+  .contact-when strong { color: var(--ink); }
+  .contact-when:not(strong) { color: var(--muted); }
+
+  /* ============ Pagination ============ */
+  .paginator {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 32px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  .paginator button {
+    background: var(--paper);
+    border: 1px solid var(--ink);
+    color: var(--ink);
+    padding: 10px 20px;
+    font-family: var(--body-font);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .paginator button:hover:not(:disabled) {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .paginator button:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    border-color: var(--border);
+  }
+
+  .paginator-progress {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  /* ============ Footer ============ */
+  .footer {
+    margin-top: 56px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 2px;
+  }
+
+  /* ============ TOC (panel 1) ============ */
+  .toc {
+    margin-top: 24px;
+  }
+
+  .toc-item {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    align-items: baseline;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: padding 0.15s;
+  }
+
+  .toc-item:hover {
+    padding-left: 12px;
+  }
+
+  .toc-item:last-child { border-bottom: none; }
+
+  .toc-num {
+    font-family: var(--title-font);
+    font-style: italic;
+    font-size: 22px;
+    color: var(--muted);
+  }
+
+  .toc-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 2px;
+  }
+
+  .toc-sub {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .brand-logo {
+    height: 24px;
     width: auto;
     display: block;
-    margin-bottom: 4px;
   }
-
-  .contact-card .desc {
-    font-size: 13px;
-    color: var(--muted);
-    margin-bottom: 4px;
+  .brand-logo.white { filter: invert(1); }
+  .hero-image {
+    max-width: 100%;
+    height: auto;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
   }
-
-  .contact-card .when {
-    font-size: 13px;
-    color: var(--muted);
-    margin-top: 8px;
-  }
-
-  .contact-card .when strong { color: var(--ink); }
-
-  /* ============ Code / inline UI refs ============ */
-  code {
-    padding: 2px 6px;
-    background: var(--gray-bg);
-    border: 1px solid var(--border);
-    border-radius: 2px;
-    font-family: ui-monospace, Menlo, monospace;
-    font-size: 13px;
-  }
-
-  /* Three-outcomes section (for valideringsfeil-article) */
-  .outcomes {
+  .hero-layout {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    margin: 24px 0;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: center;
+    margin: 32px 0 48px;
   }
-
-  @media (max-width: 720px) { .outcomes { grid-template-columns: 1fr; } }
-
-  .outcome {
-    background: var(--paper);
-    border: 1px solid var(--border);
-    padding: 16px;
-    border-radius: 2px;
+  @media (max-width: 720px) {
+    .hero-layout { grid-template-columns: 1fr; }
   }
-
-  .outcome-pill {
-    display: inline-block;
-    padding: 3px 10px;
-    border-radius: 2px;
-    font-size: 10px;
+  .hero-text h1 {
+    font-family: var(--title-font);
+    font-size: 54px;
     font-weight: 700;
-    letter-spacing: 2px;
-    margin-bottom: 12px;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
   }
-  .outcome.red .outcome-pill { background: var(--red-bg); color: var(--red); }
-  .outcome.amber .outcome-pill { background: var(--amber-bg); color: var(--amber); }
-  .outcome.green .outcome-pill { background: var(--green-bg); color: var(--green); }
+  .hero-text p {
+    font-style: italic;
+    font-size: 20px;
+    color: var(--muted);
+  }
+  .hero-image-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .hero-image-wrap img {
+    max-height: 280px;
+    width: auto;
+    image-rendering: pixelated;
+  }
 
-  .outcome h4 { font-size: 14px; margin-bottom: 10px; }
-  .outcome ul { margin: 0; padding-left: 16px; }
-  .outcome li { font-size: 12px; color: var(--muted); margin-bottom: 3px; }
+  /* Character illustrations inline */
+  .character-illustration {
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Big rule redesign with Mallory */
+  .rule-layout {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 40px;
+    align-items: center;
+    padding: 24px 0;
+  }
+  @media (max-width: 720px) {
+    .rule-layout {
+      grid-template-columns: 1fr;
+      text-align: center;
+    }
+    .rule-layout > .mallory-wrap { margin: 0 auto; }
+  }
+  .mallory-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .mallory-wrap img { height: 180px; width: auto; }
+  .mallory-caption {
+    font-size: 11px;
+    color: var(--muted);
+    font-style: italic;
+    text-align: center;
+    max-width: 180px;
+  }
+
+  /* Alice + Bob + Yves scene on help panel */
+  .help-hero {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 24px 0 32px;
+    padding: 32px 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .help-hero img { height: 140px; width: auto; image-rendering: pixelated; }
+
+  /* Contact card logo */
+  .contact-ab-logo {
+    height: 24px;
+    width: auto;
+    margin-bottom: 16px;
+  }
+
+  /* Closing block with white/dark treatment */
+  .closing-block {
+    margin-top: 48px;
+    padding: 48px 32px;
+    background: var(--ink);
+    color: var(--paper);
+    text-align: center;
+  }
+  .closing-block img.pair { height: 140px; width: auto; image-rendering: pixelated; margin: 0 auto 24px; display: block; }
+  .closing-block h3 {
+    font-family: var(--title-font);
+    font-size: 40px;
+    font-weight: 700;
+    color: var(--paper);
+    margin-bottom: 8px;
+  }
+  .closing-block p {
+    font-style: italic;
+    color: var(--border);
+    font-size: 16px;
+    margin-bottom: 24px;
+  }
+  .closing-block .closing-logo {
+    height: 24px;
+    width: auto;
+    display: inline-block;
+  }
 </style>
 </head>
 <body>
+<div class="app">
 
-<div class="layout">
+  <!-- Header -->
+  <header class="brand">
+    <a href="https://alice-bob.no" class="brand-mark">
+      <img src="data:image/png;base64,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" alt="Alice & Bob" class="brand-logo">
+    </a>
+    <div class="progress" id="headerProgress">Onboarding &middot; <span id="progressText">1 / 7</span></div>
+  </header>
 
-  <!-- ============ SIDEBAR ============ -->
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-      <a href="#" onclick="goTo('home'); return false;">
-        <img src="images/logo.png" alt="Alice &amp; Bob" class="sidebar-logo">
-      </a>
-      <div class="sidebar-title">Hjelpesenter</div>
+  <!-- Hero -->
+  <div id="hero" class="hero-layout">
+    <div class="hero-text">
+      <h1>Elektronisk tinglysing</h1>
+      <p>Onboarding for nye brukere</p>
     </div>
-
-    <div class="search-wrap">
-      <input type="text" class="search-input" id="searchInput" placeholder="Søk…" oninput="doSearch()">
+    <div class="hero-image-wrap">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA2gAAAJACAYAAAD4nkXSAAABCGlDQ1BJQ0MgUHJvZmlsZQAAeJxjYGA8wQAELAYMDLl5JUVB7k4KEZFRCuwPGBiBEAwSk4sLGHADoKpv1yBqL+viUYcLcKakFicD6Q9ArFIEtBxopAiQLZIOYWuA2EkQtg2IXV5SUAJkB4DYRSFBzkB2CpCtkY7ETkJiJxcUgdT3ANk2uTmlyQh3M/Ck5oUGA2kOIJZhKGYIYnBncAL5H6IkfxEDg8VXBgbmCQixpJkMDNtbGRgkbiHEVBYwMPC3MDBsO48QQ4RJQWJRIliIBYiZ0tIYGD4tZ2DgjWRgEL7AwMAVDQsIHG5TALvNnSEfCNMZchhSgSKeDHkMyQx6QJYRgwGDIYMZAKbWPz9HbOBQAAAjyklEQVR4nO3dyXIb2dUuUKEHCFKSNfD7v5mHnskSRRI9+A98HVdnBwtHWQkgdwJrzU6gS2QD6qusL/bg/f39EwAAAN0bdr0BAAAA/JeABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISA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bT6fF+vNZlOsYyctfp9///vfxfrbt283fb5QuvffDzgnd9AAAACSENAAAACSENAAAACSMJSJm5ZtjlXsbJDLvc19iu79+8c5hXF/bLfbYh07arXOWm2O2bXFOVWr1erk82NnLq7/+c9/Fuv5fF7sgNfX18bbyOVMJpNivdvtinXT81vHDM4n179eAQAA7piABgAAkISABgAAkIQ5aNyU2HmIc3y6/n/kzYnJLR6f2WxWPL5er2/6+Pj+p6/P6XRarGMnLYr7L/4edS12YuO/B2IHsdZZqr1/7DDt9/s/2k660XRun79fcD7uoAEAACQhoAEAACQhoAEAACShg8ZZDYfD97AuHo//D3ttrkptblh8PHZCYmciPn+9Xhfrx8fHYv3y8lKs4/eJc4TinJ/aHJnog7kyxXq5XBbrOLcodkZq3yfbXKZrix2heH7Gjk3sINU6GbXzvWv3/v1rc8ri9Ravn6jW0Wra6bm2+XxerGsds/h7U+u0Zfu+9y7+/WraKYydyjhHMGraOax1PuP1tt1uc/3AQAvuoAEAACQhoAEAACQhoAEAACShg8ZZxTlCsdMR/x/22GGI66Yu3fGovX/sqEW179f09dk7LX137v0bj2/b8/3Sbv371zqwUW2uWdP361rsDDXtCDWd89Z0jhrXVbs+Hx4einXshDU9f+L1UuuMx851ZA4bt8QdNAAAgCQENAAAgCQENAAAgCR00AAA6NSPHz+Kf5B+/fpVp4y75Q4aAABAEgIaAABAEgIaAABAEjpoAAAASbiDBgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkISABgAAkMT/AVwQEO90ev4UAAAAAElFTkSuQmCC" alt="Alice og Bob">
     </div>
+  </div>
 
-    <nav id="nav">
-      <div class="nav-section">
-        <div class="nav-section-title">Kom i gang</div>
-        <a href="#" class="nav-item" data-article="home" onclick="goTo('home'); return false;"><span class="nav-item-num">·</span>Velkommen</a>
-        <a href="#" class="nav-item" data-article="oversikt" onclick="goTo('oversikt'); return false;"><span class="nav-item-num">·</span>Hva tinglysing er</a>
-      </div>
+  <!-- Stepper -->
+  <nav class="stepper" id="stepper"></nav>
 
-      <div class="nav-section">
-        <div class="nav-section-title">Vitec Next</div>
-        <a href="#" class="nav-item" data-article="vitec-bestille" onclick="goTo('vitec-bestille'); return false;"><span class="nav-item-num">1.</span>Bestill Alice &amp; Bob-tjeneste</a>
-        <a href="#" class="nav-item" data-article="vitec-dokumenter" onclick="goTo('vitec-dokumenter'); return false;"><span class="nav-item-num">2.</span>Velg dokument</a>
-        <a href="#" class="nav-item" data-article="vitec-skjote" onclick="goTo('vitec-skjote'); return false;"><span class="nav-item-num">3.</span>Opprett skjøte</a>
-        <a href="#" class="nav-item" data-article="vitec-valideringsfeil" onclick="goTo('vitec-valideringsfeil'); return false;"><span class="nav-item-num">4.</span>Lagring med valideringsfeil</a>
-        <a href="#" class="nav-item" data-article="vitec-signering" onclick="goTo('vitec-signering'); return false;"><span class="nav-item-num">5.</span>Send til signering</a>
-      </div>
+  <!-- Panels -->
+  <section>
 
-      <div class="nav-section">
-        <div class="nav-section-title">Oppsett</div>
-        <a href="#" class="nav-item" data-article="altinn-tilganger" onclick="goTo('altinn-tilganger'); return false;"><span class="nav-item-num">·</span>Altinn-tilganger (AFPANT)</a>
-        <a href="#" class="nav-item" data-article="bankid" onclick="goTo('bankid'); return false;"><span class="nav-item-num">·</span>Logge inn med BankID</a>
-      </div>
+    <!-- Panel 1 — Agenda -->
+    <article class="panel active" data-step="1">
+      <h2>Hva du lærer her</h2>
+      <p class="lede">Fem korte moduler. Du kan hoppe rundt når du vil.</p>
 
-      <div class="nav-section">
-        <div class="nav-section-title">Propware</div>
-        <a href="#" class="nav-item" data-article="propware-dokument" onclick="goTo('propware-dokument'); return false;"><span class="nav-item-num">1.</span>Legg til dokument</a>
-        <a href="#" class="nav-item" data-article="propware-skjote" onclick="goTo('propware-skjote'); return false;"><span class="nav-item-num">2.</span>Send skjøte til signering</a>
-        <a href="#" class="nav-item" data-article="propware-vedlegg" onclick="goTo('propware-vedlegg'); return false;"><span class="nav-item-num">3.</span>Legg til vedlegg</a>
-        <a href="#" class="nav-item" data-article="propware-tinglys" onclick="goTo('propware-tinglys'); return false;"><span class="nav-item-num">4.</span>Tinglys signerte dokumenter</a>
-        <a href="#" class="nav-item" data-article="propware-pantedokument" onclick="goTo('propware-pantedokument'); return false;"><span class="nav-item-num">5.</span>Pantedokument fra bank</a>
-        <a href="#" class="nav-item" data-article="propware-sikring" onclick="goTo('propware-sikring'); return false;"><span class="nav-item-num">6.</span>Opprett sikring</a>
-      </div>
-
-      <div class="nav-section">
-        <div class="nav-section-title">Referanse</div>
-        <a href="#" class="nav-item" data-article="valideringsfeil" onclick="goTo('valideringsfeil'); return false;"><span class="nav-item-num">·</span>Valideringsfeil</a>
-        <a href="#" class="nav-item" data-article="vedleggstyper" onclick="goTo('vedleggstyper'); return false;"><span class="nav-item-num">·</span>Støttede vedleggstyper</a>
-        <a href="#" class="nav-item" data-article="kontakt" onclick="goTo('kontakt'); return false;"><span class="nav-item-num">·</span>Hjelp og kontakt</a>
-      </div>
-    </nav>
-  </aside>
-
-  <!-- ============ MAIN ============ -->
-  <main class="main">
-    <button class="mobile-menu-btn" onclick="toggleSidebar()">☰ Meny</button>
-
-    <!-- ============ HOME ============ -->
-    <article class="article active" data-article="home">
-      <div class="welcome-hero">
-        <div class="welcome-text">
-          <h1>Hjelpesenter for elektronisk tinglysing</h1>
-          <p>En praktisk veileder for å opprette, signere og tinglyse dokumenter gjennom Alice &amp; Bob.</p>
+      <div class="toc">
+        <div class="toc-item" onclick="goTo(2)">
+          <div class="toc-num">01</div>
+          <div><div class="toc-title">Hva tinglysing er</div><div class="toc-sub">Og hvordan det fungerer hos oss</div></div>
         </div>
-        <div class="welcome-illustration">
-          <img src="images/alice-bob.png" alt="Alice og Bob">
+        <div class="toc-item" onclick="goTo(3)">
+          <div class="toc-num">02</div>
+          <div><div class="toc-title">De tre utfallene</div><div class="toc-sub">Avvist, manuell, eller godkjent</div></div>
         </div>
-      </div>
-
-      <h2 style="margin-top: 0;">Populære emner</h2>
-
-      <div class="topic-grid">
-        <a class="topic-card" href="#" onclick="goTo('vitec-bestille'); return false;">
-          <span class="topic-card-num">Vitec Next</span>
-          <div class="topic-card-title">Komplett Vitec-flyt</div>
-          <div class="topic-card-desc">Fra opprettelse til signering</div>
-        </a>
-        <a class="topic-card" href="#" onclick="goTo('propware-dokument'); return false;">
-          <span class="topic-card-num">Propware</span>
-          <div class="topic-card-title">Komplett Propware-flyt</div>
-          <div class="topic-card-desc">Dokumenter, vedlegg og tinglysing</div>
-        </a>
-        <a class="topic-card" href="#" onclick="goTo('valideringsfeil'); return false;">
-          <span class="topic-card-num">Referanse</span>
-          <div class="topic-card-title">Valideringsfeil</div>
-          <div class="topic-card-desc">Hva betyr meldingene fra Kartverket?</div>
-        </a>
-        <a class="topic-card" href="#" onclick="goTo('altinn-tilganger'); return false;">
-          <span class="topic-card-num">Oppsett</span>
-          <div class="topic-card-title">Altinn-tilganger (AFPANT)</div>
-          <div class="topic-card-desc">Førstegangsoppsett for virksomheten</div>
-        </a>
-        <a class="topic-card" href="#" onclick="goTo('vedleggstyper'); return false;">
-          <span class="topic-card-num">Referanse</span>
-          <div class="topic-card-title">Vedleggstyper</div>
-          <div class="topic-card-desc">Hva som støttes og når de trengs</div>
-        </a>
-        <a class="topic-card" href="#" onclick="goTo('kontakt'); return false;">
-          <span class="topic-card-num">Hjelp</span>
-          <div class="topic-card-title">Kontakt oss</div>
-          <div class="topic-card-desc">Kartverket og Alice &amp; Bob</div>
-        </a>
-      </div>
-
-      <h2>De tre utfallene fra Kartverket</h2>
-      <p>Når du sender en forsendelse til tinglysing, er resultatet alltid ett av disse tre. Klikk for utdypende forklaring.</p>
-
-      <div class="faq-cards">
-        <a class="faq-card red" href="#" onclick="goTo('valideringsfeil'); return false;">
-          <span class="faq-card-pill">AVVIST</span>
-          <div class="faq-card-title">Forsendelsen stoppes</div>
-          <div class="faq-card-desc">Automatisk avvist før saksbehandler ser den</div>
-        </a>
-        <a class="faq-card amber" href="#" onclick="goTo('valideringsfeil'); return false;">
-          <span class="faq-card-pill">MANUELL</span>
-          <div class="faq-card-title">Saksbehandler vurderer</div>
-          <div class="faq-card-desc">Går til manuell behandling hos Kartverket</div>
-        </a>
-        <a class="faq-card green" href="#" onclick="goTo('valideringsfeil'); return false;">
-          <span class="faq-card-pill">GODKJENT</span>
-          <div class="faq-card-title">Tinglyst automatisk</div>
-          <div class="faq-card-desc">Registrert i grunnboken på sekunder</div>
-        </a>
+        <div class="toc-item" onclick="goTo(4)">
+          <div class="toc-num">03</div>
+          <div><div class="toc-title">Én regel du aldri må glemme</div><div class="toc-sub">Om signering og uendringer</div></div>
+        </div>
+        <div class="toc-item" onclick="goTo(5)">
+          <div class="toc-num">04</div>
+          <div><div class="toc-title">Tinglysing med vedlegg</div><div class="toc-sub">Når vedlegg må være med i forsendelsen</div></div>
+        </div>
+        <div class="toc-item" onclick="goTo(6)">
+          <div class="toc-num">05</div>
+          <div><div class="toc-title">Spesialtilfeller</div><div class="toc-sub">Dødsbo og urådighet</div></div>
+        </div>
+        <div class="toc-item" onclick="goTo(7)">
+          <div class="toc-num">06</div>
+          <div><div class="toc-title">Hvor du får hjelp</div><div class="toc-sub">Kontakt og ressurser</div></div>
+        </div>
       </div>
     </article>
 
-    <!-- ============ OVERSIKT ============ -->
-    <article class="article" data-article="oversikt">
-      <div class="breadcrumb">Kom i gang</div>
-      <h1>Hva er elektronisk tinglysing?</h1>
+    <!-- Panel 2 — What is it -->
+    <article class="panel" data-step="2">
+      <h2>Hva er elektronisk tinglysing?</h2>
       <p class="lede">Den tradisjonelle papirprosessen, fra slutt til slutt, i sekunder.</p>
 
-      <p><strong>Alice ønsker å overføre en eiendom til Bob.</strong> I stedet for papirskjøter som sendes med post til Kartverket, signerer Alice og Bob elektronisk med BankID. Dokumentet valideres og registreres i grunnboken i løpet av sekunder.</p>
+      <div class="two-col">
+        <div>
+          <p class="lead">Alice ønsker å overføre en eiendom til Bob.</p>
+          <p>I stedet for papirskjøter som sendes med post til Kartverket, signerer Alice og Bob elektronisk med BankID. Dokumentet valideres og registreres i grunnboken i løpet av sekunder.</p>
+          <p style="font-style: italic; color: var(--muted);">Det vi bygger, er infrastrukturen som gjør dette sikkert: signaturene er ekte, meldingene er kryptert, og hver forsendelse er sporbar.</p>
+        </div>
 
-      <p>Det vi bygger, er infrastrukturen som gjør dette sikkert: signaturene er ekte, meldingene er kryptert, og hver forsendelse er sporbar.</p>
-
-      <h2>Hva denne veilederen dekker</h2>
-      <p>Veilederen er delt i fem hoveddeler, avhengig av hvilket fagsystem du bruker og hva du skal gjøre:</p>
-
-      <ul>
-        <li><strong>Vitec Next</strong> — Bestill Alice &amp; Bob-tjenesten og opprett tinglysingsdokumenter direkte fra oppdraget.</li>
-        <li><strong>Oppsett</strong> — Førstegangsoppsett av Altinn-tilganger og BankID-innlogging.</li>
-        <li><strong>Propware</strong> — Full flyt for eiendomsadvokater: dokumentopprettelse, signering, vedlegg, tinglysing, pantedokument fra bank og sikring.</li>
-        <li><strong>Referanse</strong> — Oppslagsverk for valideringsfeil, vedleggstyper og kontaktinfo.</li>
-      </ul>
-
-      <div class="callout blue">
-        <div class="callout-title">Tips</div>
-        <p>Bruk søkefeltet til venstre for å finne akkurat det du trenger. Hver side har skjermbilder som viser nøyaktig hvor du skal klikke.</p>
-      </div>
-
-      <div class="pagination">
-        <a class="prev" href="#" onclick="goTo('home'); return false;">
-          <div class="pagination-label">← Tilbake</div>
-          <div class="pagination-title">Velkommen</div>
-        </a>
-        <a class="next" href="#" onclick="goTo('vitec-bestille'); return false;">
-          <div class="pagination-label">Neste →</div>
-          <div class="pagination-title">Bestill Alice &amp; Bob-tjeneste</div>
-        </a>
+        <div class="ab-diagram" style="display:flex;flex-direction:column;align-items:center;gap:16px;">
+          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA9gAAAMICAYAAAAzFE1eAAABCGlDQ1BJQ0MgUHJvZmlsZQAAeJxjYGA8wQAELAYMDLl5JUVB7k4KEZFRCuwPGBiBEAwSk4sLGHADoKpv1yBqL+viUYcLcKakFicD6Q9ArFIEtBxopAiQLZIOYWuA2EkQtg2IXV5SUAJkB4DYRSFBzkB2CpCtkY7ETkJiJxcUgdT3ANk2uTmlyQh3M/Ck5oUGA2kOIJZhKGYIYnBncAL5H6IkfxEDg8VXBgbmCQixpJkMDNtbGRgkbiHEVBYwMPC3MDBsO48QQ4RJQWJRIliIBYiZ0tIYGD4tZ2DgjWRgEL7AwMAVDQsIHG5TALvNnSEfCNMZchhSgSKeDHkMyQx6QJYRgwGDIYMZAKbWPz9HbOBQAAAsyUlEQVR4nO3d3W7b1rY24K1/yU7iYqFoctD7v7IeNMHCQp3Etv69Dz4sYM/xpZxlOGRS1POcTVCSKUqi/Zp4NSavr6//AwAAAHQz7XsHAAAAYAwEbAAAAEggYAMAAEACARsAAAASCNgAAACQQMAGAACABAI2AAAAJBCwAQAAIIGADQAAAAkEbAAAAEggYAMAAEACARsAAAASCNgAAACQQMAGAACABAI2AAAAJBCwAQAAIIGADQAAAAkEbAAAAEggYAMAAEACARsAAAASCNgAAACQQMAGAACABAI2AAAAJBCwAQAAIIGADQAAAAkEbAAAAEggYAMAAEACARsAAAASCNgAAACQQMAGAACABAI2AAAAJBCwAQAAIIGADQAAAAkEbAAAAEggYAMAAEACARsAAAASCNgAAACQQMAGAACABAI2AAAAJBCwAQAAIIGADQAAAAkEbAAAAEggYAMAAEACARsAAAASCNgAAACQQMAGAACABAI2AAAAJBCwAQAAIIGADQAAAAkEbAAAAEggYAMAAEACARsAAAASCNgAAACQQMAGAACABAI2AAAAJBCwAQAAIIGADQAAAAkEbAAAAEggYAMAAEACARsAAAASCNgAAACQQMAGAACABAI2AAAAJBCwAQAAIIGADQAAAAkEbAAAAEggYAMAAEACARsAAAASCNgAAACQQMAGAACABAI2AAAAJBCwAQAAIIGADQAAAAkEbAAAAEggYAMAAEACARsAAAASCNgAAACQQMAGAACABAI2AAAAJBCwAQAAIIGADQAAAAkEbAAAAEggYAMAAEACARsAAAASCNgAAACQQMAGAACABAI2AAAAJBCwAQAAIIGADQAAAAkEbAAAAEggYAMAAEACARsAAAASCNgAAACQQMAGAACABAI2AAAAJBCwAQAAIIGADQAAAAkEbAAAAEggYAMAAEACARsAAAASCNgAAACQQMAGAACABAI2AAAAJJj3vQMAAPB/TSaT1y73n8/LP3GPx2Pq7WteX18nnR4AuFquYAMAAEACARsAAAASCNgAAACQQAcbAIBBubu7K9an06lY73a7Yr1arRq3TybNlejYua49Xtw+m80aHx+4Ha5gAwAAQAIBGwAAABII2AAAAJBg8vraacwgAAAUNptN8QfmdrsttsdOdNe/R+Mc6/P5XKyn0+ZrSrXbd52LHZ9vbX+Px6M52nClXMEGAACABAI2AAAAJBCwAQAAIIEONgAAqSaTSeMfmLHjHDvIca70YrEo1ofDoVjHOdkfPnwo1l+/fm3anertu+5P7flGr6+vOthwpVzBBgAAgAQCNgAAACQQsAEAACCBDjYAAIXZbFb8gRj/XozrWie5puv941zpOLd6uVw23n+/37d6vJquzyeK+3M4HHS0YaBcwQYAAIAEAjYAAAAkELABAAAggQ42AACF2MGuzamOc58nk7IiHOdA124f/z6N23/QSW61f1Ht9rFTHTvZtf2t/b0dO+KxE/6D46eDDQPlCjYAAAAkELABAAAggYANAAAACXSwAQAoTCaT17AutnftHNfmRNc60bGzHDvRsTMeO8xxe99q+xePx/F41MGGgXIFGwAAABII2AAAAJBAwAYAAIAE8/pNAAC4ZbVOddwe51THjnTsXMcOcux01+ZER/H+Q1ObEx472PH5A8PlCjYAAAAkELABAAAggYANAAAACczBBgC4MXHOdewAn06nQZeYp9Npsf+xo7zb7d50f7qqzQWPap3t19fXQb9+MGauYAMAAEACARsAAAASCNgAAACQwBxsAIAbs1qtivW1dZbbdq7j3Om+v4NovV4X6+1223j72lzxoc/9hlviCjYAAAAkELABAAAggYANAAAACczBBgAYmTjnOnZ4D4fDqEu7d3d3xfN/eXnpa1f+kdgpjx3rOOfaHGwYLlewAQAAIIGADQAAAAkEbAAAAEhgDjYAwMjFTu/YDb1zHcXvRGrbuY4de6A/rmAD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r03bLz1nej6fFz//dDq1+vld7w8AwLi4gg0AAAAJBGwAAABIIGADAABAAh1s4Kd1nQs9mZQV5beekx33f7Vadbr/bDbrvE8AAFwvV7ABAAAggYANAAAACQRsAAAASKCDDfyt6XRazHl+fS3HVned83w+nzvNyV4sFsX6cDgU6+VyWaz3+32xzp5THedg06z2+nJbPnz4UKyfnp6KdTz/1L5D4Y8//ijWv/76q7n0AFycK9gAAACQQMAGAACABAI2AAAAJJjEThPAfy2Xy+IEETvGp9Ppop3G2WxW/Pza3Om4vXZ+69rBns/njccnu+M9NjrYty3OvT8ej8U6fr7bfseBzx8AfXAFGwAAABII2AAAAJBAwAYAAIAEOtjA36p1ZHUcm8XjFzulx+Pxpo9f2w72ZFIertocdcbN+QmAIXIFGwAAABII2AAAAJBAwAYAAIAE8/pNAP6f6dT/5NpYrVbFerfb9bQn3KK//vqr6Cj/8ssvOskAcGH+WgYAAIAEAjYAAAAkELABAAAggTnYcMNWq1VxAtjv98V2c2S7Mae3mTnYdOHzBcAQuYINAAAACQRsAAAASCBgAwAAQAJzsOGGxc71bDbraU9uw3zulAsAMGauYAMAAEACARsAAAASCNgAAACQQCEQblicK7xYLHrak3GqzeFdLBbFHN/j8djq/tAkzolerVbF9tPpVKy9/wCgO1ewAQAAIIGADQAAAAkEbAAAAEiggw037PW1qGj+f3OxuazYeYVMca79brfraU8A4Ha4gg0AAAAJBGwAAABIIGADAABAAh1sGLFPnz4VJevPnz8X22tzbv/666/i/r/88ou5uBcU5xQzbtPptPh8xe9EqH0+45zrKHaw49z7+PO8/wCgO1ewAQAAIIGADQAAAAkEbAAAAEgwiR0sYDxqHc1ax5PLms/nxetzOp2K7WN/fWrvzx/cvlifz+erPj7ZHezYuY7vp7g9urb3n/MbAEPkCjYAAAAkELABAAAggYANAAAACczBBujJ8Xhs1bGdTsv/iZ5OJx3TK1brkLftqM/n5a/02Km+to41AFwjV7ABAAAggYANAAAACQRsAAAASKCDDTBQsVN7PB5b3f/PP/8sOryfPn3Sub0isXMf54DHTvVutyvWm82mWL+8vCTuHQDwI65gAwAAQAIBGwAAABII2AAAAJBg8vraaswmcEVqc3TNwb2s+XxeHP/z+fw/YX3Tc7DbznmOHeTa8Ru7ePwWi0Wxfb/fj/r4OL8BMESuYAMAAEACARsAAAASCNgAAACQwBxsgAuJc4rb+kHnuNPjMS4fPnwo1l+/fu1pTwCA/3IFGwAAABII2AAAAJBAwAYAAIAEOtjAYMU5t+/fvy+2f/36ddBzbrvO4W07J/vW5iBfuzgnvdbZn81mxbp2+3fv3hWP//T0VGw3JxoA8rmCDQAAAAkEbAAAAEggYAMAAECCyevra/1WwFWKHd1o6B3MuP/Tafk/wdPpNOj9v7Sxvb7/4PbFutZRH7r4/Ofz5q9FiXPQ4/GIYkc7driPx+Oojl809Pc/AOPkCjYAAAAkELABAAAggYANAAAACczBBq5GrXN6bbrOsW47F5m39enTp+L1/fz5c7G9a0d4tVoVj7/f71s9fnz/ffz4sdj+559/jusDBwBvwBVsAAAASCBgAwAAQAIBGwAAABKYgw0jdu1zYuP+m+NbWq/Xxf13u12r+/dt7HOwL/356/r4Yzs/REPffwDGyRVsAAAASCBgAwAAQAIBGwAAABKYgw03JHaYh27sHdKu+7fdbgf9/Chlf/66vn/MUQeAfK5gAwAAQAIBGwAAABII2AAAAJBABxtG7OHhoVg/Pj72tCdvY7Va9b0LF/X4+Fh0zh8eHnSwByy+H+Oc8r7FzvXYPz8A8BZcwQYAAIAEAjYAAAAkELABAAAgweT1tXGMLHDFrn1OdFfz+bx4/rFzOvbnP3S19+cPbl+sz+fzoF+/S3/+4uMvl8ti+263G/Uc+WvffwDGyRVsAAAASCBgAwAAQAIBGwAAABKYgw0jtlgsivXhcOhpT/oxm82Kdezwwluazy/7K7ft5zvuz/F4zNwdALhJrmADAABAAgEbAAAAEgjYAAAAkMAcbBgxc2KbzWaz4vjEzvp2u73p43NpY5+DXROf/3Ra/s/7fD433r/2+V2v18Xj7/f7+PijOn7RrZ/fAOiHK9gAAACQQMAGAACABAI2AAAAJDAHG0bs7u6uWL+8vPS0J8MUO663NiecftXmUHedU73b7X5uxwCAn+YKNgAAACQQsAEAACCBgA0AAAAJzMGGEfvy5UvxAf/tt9+KubBxjuzHjx+L+//55583PUc2zhGudVrjnOZ4fq1tj3O4a53wS8/5nc/nxQ6eTqdWP3+5XBb379pxH9scbLoxBxuAIXIFGwAAABII2AAAAJBAwAYAAIAEOthww3QYm8XjM5vNiu2xkzydlv+zrHWwoziXOz5e3H7p12c6nRZPID6f2s+vvb/a0sHm/3L+AmCIXMEGAACABAI2AAAAJBCwAQAAIIEONvC3dBwvK3acb13bueHef7ctnp/idxacTifvDwDenCvYAAAAkEDABgAAgAQCNgAAACSY970DwPXYbDZ978Ko+A6M0nq9Ltbb7banPeEazef+pAGgf65gAwAAQAIBGwAAABII2AAAAJDAHGzgp61Wq+IEst/vi+3mFDerzRm/dbU52IxL7FCfz+fGtfMLAEPkCjYAAAAkELABAAAggYANAAAACQyNBH5a7MhCG7Fzezwei3XsXE+n5f+EYyc3vh8Xi0Wxjt8RQL/adq7v7u4uvk8A0JUr2AAAAJBAwAYAAIAEAjYAAAAkMAcbLqg257jvDnPt81/ryEaz2axYn06nYv3+/fti/f3799oujprzb2mz2RTr2JmO76flctl4+yh2eJ+fn9vuIgMSO/aHw6FY1zr7XR8/nh/j+uXlxZdUANwgV7ABAAAggYANAAAACQRsAAAASKCDDRc0n8+LD1jsAPb9+at1pqPValWsd7td4+3bdmS5LW07/rVObNv3M/2qvf7v3r0r1vE7G+J3WMR1PN/W5m7H7fH91fZ8/fr6qoMNcINcwQYAAIAEAjYAAAAkELABAAAggQ42AAAAJHAFGwAAABII2AAAAJBAwAYAAIAEAjYAAAAkELABAAAggYANAAAACQRsAAAASCBgAwAAQAIBGwAAABII2AAAAJBAwAYAAIAEAjYAAAAkELABAAAggYANAAAACQRsAAAASCBgAwAAQAIBGwAAABII2AAAAJBAwAYAAIAEAjYAAAAkELABAAAggYANAAAACQRsAAAASCBgAwAAQAIBGwAAABII2AAAAJBAwAYAAIAEAjYAAAAkELABAAAggYANAAAACQRsAAAASCBgAwAAQAIBGwAAABII2AAAAJBAwAYAAIAEAjYAAAAkELABAAAggYANAAAACQRsAAAASCBgAwAAQAIBGwAAABII2AAAAJBAwAYAAIAEAjYAAAAkELABAAAggYANAAAACQRsAAAASCBgAwAAQAIBGwAAABII2AAAAJBAwAYAAIAEAjYAAAAkELABAAAggYANAAAACQRsAAAASCBgAwAAQAIBGwAAABII2AAAAJBAwAYAAIAEAjYAAAAkELABAAAggYANAAAACQRsAAAASCBgAwAAQAIBGwAAABII2AAAAJBAwAYAAIAEAjYAAAAkELABAAAggYANAAAACQRsAAAASCBgAwAAQAIBGwAAABII2AAAAJBAwAYAAIAEAjYAAAAkELABAAAggYANAAAACQRsAAAASCBgAwAAQAIBGwAAABII2AAAAJBAwAYAAIAEAjYAAAAkELABAAAggYANAAAACQRsAAAASCBgAwAAQAIBGwAAABII2AAAAJBAwAYAAIAEAjYAAAAkELABAAAggYANAAAACQRsAAAASCBgAwAAQAIBGwAAABII2AAAAJBAwAYAAIAEAjYAAAAkELABAAAggYANAAAACQRsAAAASCBgAwAAQAIBGwAAABII2AAAAJBAwAYAAIAEAjYAAAAkELABAAAggYANAAAACQRsAAAASCBgAwAAQAIBGwAAABII2AAAAJBAwAYAAIAEAjYAAAAkELABAAAggYANAAAACQRsAAAASCBgAwAAQAIBGwAAABII2AAAAJBAwAYAAIAEAjYAAAAkELABAAAggYANAAAACQRsAAAASCBgAwAAQAIBGwAAABII2AAAAJBAwAYAAIAEAjYAAAAkELABAAAggYANAAAACQRsAAAASCBgAwAAQAIBGwAAABII2AAAAJBAwAYAAIAEAjYAAAAkELABAAAggYANAAAACQRsAAAASCBgAwAAQAIBGwAAABII2AAAAJBAwAYAAIAEAjYAAAAkELABAAAggYANAAAACQRsAAAASCBgAwAAQAIBGwAAABII2AAAAJBAwAYAAIAEAjYAAAAkELABAAAggYANAAAACQRsAAAASCBgAwAAQAIBGwAAABII2AAAAJBAwAYAAIAEAjYAAAAkELABAAAggYANAAAACQRsAAAASCBgAwAAQAIBGwAAABII2AAAAJBAwAYAAIAEAjYAAAAkELABAAAggYANAAAACQRsAAAASCBgAwAAQAIBGwAAABII2AAAAJBAwAYAAIAEAjYAAAAkELABAAAggYANAAAACQRsAAAASCBgAwAAQAIBGwAAABII2AAAAJBAwAYAAIAEAjYAAAAkELABAAAggYANAAAACQRsAAAASCBgAwAAQAIBGwAAABII2AAAAJBAwAYAAIAEAjYAAAAkELABAAAggYANAAAACQRsAAAASCBgAwAAQAIBGwAAABII2AAAAJBAwAYAAIAEAjYAAAAkELABAAAggYANAAAACQRsAAAASPC/OU+Tmpc4kBgAAAAASUVORK5CYII=" alt="Alice og Bob signerer elektronisk" class="character-illustration" style="max-height:240px;">
+          <div style="font-size:12px;color:var(--muted);font-style:italic;text-align:center;">Alice og Bob signerer hver sitt skjøte</div>
+          <div class="ab-down-arrow"></div>
+          <div class="ab-box">
+            <div class="ab-box-title">Kartverket</div>
+            <div class="ab-box-sub">Validerer og registrerer i grunnboken</div>
+          </div>
+        </div>
       </div>
     </article>
 
-    <!-- ============ VITEC: BESTILLE ============ -->
-    <article class="article" data-article="vitec-bestille">
-      <div class="breadcrumb">Vitec Next · Steg 1 av 5</div>
-      <h1>Bestill Alice &amp; Bob-tjeneste</h1>
-      <p class="lede">Aktiver e-tinglysing på et oppdrag i Vitec Next.</p>
-
-      <div class="step">
-        <div class="step-num">1</div>
-        <div class="step-content">
-          <h3>Opprett oppdraget i Vitec som vanlig</h3>
-          <p>Følg standard prosedyre for å opprette et oppdrag. Ingen ekstra steg er nødvendig her.</p>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-num">2</div>
-        <div class="step-content">
-          <h3>Gå til Marked og tjenester → Bestill tjeneste → Alice &amp; Bob-tinglysing</h3>
-          <p>I sidemenyen på oppdraget, velg <code>Marked og tjenester</code>. Klikk <code>Bestill tjeneste</code>, og velg <strong>Alice &amp; Bob - Tinglysing</strong> fra listen.</p>
-
-          <div class="step-screenshot">
-            <img src="images/page-02.jpg" alt="Skjermbilde: Marked og tjenester → Bestill tjeneste → Alice &amp; Bob - Tinglysing">
-            <div class="step-caption">Vitec Next: Sidemeny → Marked og tjenester → Bestill tjeneste</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="callout green">
-        <div class="callout-title">Ferdig</div>
-        <p>Når tjenesten er bestilt, er oppdraget klart for e-tinglysing. Du kan nå gå videre til å opprette selve tinglysingsdokumentene.</p>
-      </div>
-
-      <div class="pagination">
-        <a class="prev" href="#" onclick="goTo('oversikt'); return false;">
-          <div class="pagination-label">← Forrige</div>
-          <div class="pagination-title">Hva tinglysing er</div>
-        </a>
-        <a class="next" href="#" onclick="goTo('vitec-dokumenter'); return false;">
-          <div class="pagination-label">Neste →</div>
-          <div class="pagination-title">Velg dokument</div>
-        </a>
-      </div>
-    </article>
-
-    <!-- ============ VITEC: DOKUMENTER ============ -->
-    <article class="article" data-article="vitec-dokumenter">
-      <div class="breadcrumb">Vitec Next · Steg 2 av 5</div>
-      <h1>Velg dokument som skal tinglyses</h1>
-      <p class="lede">Standard tinglysingsmetode er elektronisk på alle oppdrag.</p>
-
-      <div class="step">
-        <div class="step-num">1</div>
-        <div class="step-content">
-          <h3>Bekreft at ønsket tinglysingsmetode er elektronisk</h3>
-          <p>Ønsket tinglysingsmetode er satt til <strong>Elektronisk tinglysing</strong> som standard på alle oppdrag. Hvis du trenger å endre dette, klikk <code>Endre</code> ved siden av tinglysingsmetoden.</p>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-num">2</div>
-        <div class="step-content">
-          <h3>Klikk «Legg til dokument» og velg type</h3>
-          <p>På oppdragssiden, klikk <code>Legg til dokument</code>. En meny dukker opp med disse valgene:</p>
-          <ul>
-            <li><strong>Skjøte</strong> — overføring av hjemmel</li>
-            <li><strong>Hjemmelserklæring</strong> — ved dødsbo eller lignende</li>
-            <li><strong>Pantedokument fra bank</strong> — pantesetting av eiendom</li>
-            <li><strong>Sikring</strong> — sperre for videre tinglysing</li>
-            <li><strong>Sletting</strong> — slette tinglyst pant eller heftelser</li>
-          </ul>
-
-          <div class="step-screenshot">
-            <img src="images/page-03.jpg" alt="Skjermbilde: Legg til dokument → velg type">
-            <div class="step-caption">Vitec Next: Legg til dokument-menyen</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="pagination">
-        <a class="prev" href="#" onclick="goTo('vitec-bestille'); return false;">
-          <div class="pagination-label">← Forrige</div>
-          <div class="pagination-title">Bestill Alice &amp; Bob-tjeneste</div>
-        </a>
-        <a class="next" href="#" onclick="goTo('vitec-skjote'); return false;">
-          <div class="pagination-label">Neste →</div>
-          <div class="pagination-title">Opprett skjøte</div>
-        </a>
-      </div>
-    </article>
-
-    <!-- ============ VITEC: SKJØTE ============ -->
-    <article class="article" data-article="vitec-skjote">
-      <div class="breadcrumb">Vitec Next · Steg 3 av 5</div>
-      <h1>Opprett et nytt skjøte</h1>
-      <p class="lede">Følg flyten i systemet og fyll inn informasjon som mangler.</p>
-
-      <p>Mye av informasjonen i dokumentet er utfylt basert på informasjon hentet fra Vitec. Du kan likevel redigere og endre data der det er relevant. <strong>Alle hvite felt er redigerbare.</strong></p>
-
-      <div class="step-screenshot">
-        <img src="images/page-04.jpg" alt="Skjermbilde: Nytt skjøte-skjema med redigerbare felter">
-        <div class="step-caption">Skjema for nytt skjøte — hvite felt er redigerbare, grå er utfylt fra Vitec</div>
-      </div>
-
-      <div class="callout">
-        <div class="callout-title">Vanlige redigeringsbehov</div>
-        <p>Bruk- og boligtype hentes automatisk, men må av og til justeres. Dokumentavgiftsgrunnlag kan også avvike fra kjøpesum ved spesielle tilfeller som arveoppgjør.</p>
-      </div>
-
-      <div class="pagination">
-        <a class="prev" href="#" onclick="goTo('vitec-dokumenter'); return false;">
-          <div class="pagination-label">← Forrige</div>
-          <div class="pagination-title">Velg dokument</div>
-        </a>
-        <a class="next" href="#" onclick="goTo('vitec-valideringsfeil'); return false;">
-          <div class="pagination-label">Neste →</div>
-          <div class="pagination-title">Lagring med valideringsfeil</div>
-        </a>
-      </div>
-    </article>
-
-    <!-- ============ VITEC: VALIDERINGSFEIL ============ -->
-    <article class="article" data-article="vitec-valideringsfeil">
-      <div class="breadcrumb">Vitec Next · Steg 4 av 5</div>
-      <h1>Lagring med valideringsfeil</h1>
-      <p class="lede">Nyttig når dokumentet mangler noe som kommer senere — for eksempel hjemmelserklæring eller vedlegg.</p>
-
-      <div class="step">
-        <div class="step-num">1</div>
-        <div class="step-content">
-          <h3>Huk av «Lagre selv med valideringsfeil fra Kartverket»</h3>
-          <p>Dette lar deg lagre dokumentet selv om det har feil fra Kartverket. Det er nyttig for eksempel når man forbereder et skjøte før hjemmelserklæring er tinglyst, eller når dokumentet krever vedlegg som legges til senere.</p>
-
-          <div class="step-screenshot">
-            <img src="images/page-05.jpg" alt="Skjermbilde: Lagre selv med valideringsfeil-avkrysning">
-            <div class="step-caption">Huk av «Lagre selv med valideringsfeil fra Kartverket» og klikk Lagre</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="callout">
-        <div class="callout-title">Viktig</div>
-        <p>Et ferdig signert tinglysingsdokument kan ikke endres. Du må alltid lese valideringsmeldingene nøye før du sender til signering. Se <a href="#" onclick="goTo('valideringsfeil'); return false;">fullstendig oversikt over valideringsfeil</a>.</p>
-      </div>
-
-      <div class="pagination">
-        <a class="prev" href="#" onclick="goTo('vitec-skjote'); return false;">
-          <div class="pagination-label">← Forrige</div>
-          <div class="pagination-title">Opprett skjøte</div>
-        </a>
-        <a class="next" href="#" onclick="goTo('vitec-signering'); return false;">
-          <div class="pagination-label">Neste →</div>
-          <div class="pagination-title">Send til signering</div>
-        </a>
-      </div>
-    </article>
-
-    <!-- ============ VITEC: SIGNERING ============ -->
-    <article class="article" data-article="vitec-signering">
-      <div class="breadcrumb">Vitec Next · Steg 5 av 5</div>
-      <h1>Send skjøtet til signering</h1>
-      <p class="lede">Dersom dokumentet er klart og ikke trenger vedlegg eller eksterne signaturer.</p>
-
-      <div class="step">
-        <div class="step-num">1</div>
-        <div class="step-content">
-          <h3>Klikk «Send til signering»</h3>
-          <p>Du kan nå sende skjøtet til signering dersom det ikke er behov for hjelpedokumenter eller signaturer fra personer utenfor oppdraget.</p>
-
-          <div class="step-screenshot">
-            <img src="images/page-06.jpg" alt="Skjermbilde: Send til signering-knapp">
-            <div class="step-caption">Send til signering-knappen på oppdragssiden</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-num">2</div>
-        <div class="step-content">
-          <h3>Selgers signeringsportal oppdateres automatisk</h3>
-          <p>Selgers signeringsportal vil automatisk oppdateres med tinglysingsdokumentet som skal signeres. Dette er den samme kundeportalen som selger allerede har benyttet for å oppgi personalia i oppdraget.</p>
-
-          <div class="step-screenshot">
-            <img src="images/page-07.jpg" alt="Skjermbilde: Signeringsportalen med lenke som kan sendes til selger">
-            <div class="step-caption">Ved behov kan du sende lenken til selger på nytt: propware.no/signering</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-num">3</div>
-        <div class="step-content">
-          <h3>Legg til vedlegg (hvis nødvendig)</h3>
-          <p>Hvis dokumentet krever vedlegg, klikk de tre prikkene (<code>⋯</code>) til høyre for dokumentet og velg <code>Legg til vedlegg</code>.</p>
-
-          <div class="step-screenshot">
-            <img src="images/page-08.jpg" alt="Skjermbilde: Last opp vedlegg-dialog">
-            <div class="step-caption">Dra filen hit eller klikk for å laste opp — velg deretter vedleggskategori</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="callout green">
-        <div class="callout-title">Ferdig med Vitec-flyten</div>
-        <p>Når dokumentet er signert av alle parter, går det automatisk videre til tinglysing hos Kartverket. Les mer om <a href="#" onclick="goTo('valideringsfeil'); return false;">hva som kan skje ved tinglysing</a>.</p>
-      </div>
-
-      <div class="pagination">
-        <a class="prev" href="#" onclick="goTo('vitec-valideringsfeil'); return false;">
-          <div class="pagination-label">← Forrige</div>
-          <div class="pagination-title">Lagring med valideringsfeil</div>
-        </a>
-        <a class="next" href="#" onclick="goTo('altinn-tilganger'); return false;">
-          <div class="pagination-label">Neste →</div>
-          <div class="pagination-title">Altinn-tilganger (AFPANT)</div>
-        </a>
-      </div>
-    </article>
-
-    <!-- ============ ALTINN ============ -->
-    <article class="article" data-article="altinn-tilganger">
-      <div class="breadcrumb">Oppsett · Førstegangsoppsett</div>
-      <h1>Altinn-tilganger (AFPANT)</h1>
-      <p class="lede">Delegér rettigheter til Alice &amp; Bob AS i Altinn for å kommunisere med Kartverket på vegne av virksomheten.</p>
-
-      <div class="callout blue">
-        <div class="callout-title">Hva er AFPANT?</div>
-        <p>Digital samhandling ved eiendomshandel (AFPANT) er en tjeneste levert av Kartverket som tilbyr løsninger for samhandling gjennom Altinn. Alice &amp; Bob sender inn nødvendig informasjon til Kartverket, som legger til din virksomhet i AFPANT.</p>
-      </div>
-
-      <div class="step">
-        <div class="step-num">1</div>
-        <div class="step-content">
-          <h3>Finn hvem som har fullmakt i din virksomhet</h3>
-          <p>Finn ut hvem i din virksomhet som har fullmakt til å delegere rettigheter i Altinn. Logg inn i Altinn og gå inn på din virksomhet. Velg <code>Profil</code> fra menyen øverst på siden.</p>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-num">2</div>
-        <div class="step-content">
-          <h3>Velg «Andre med rettigheter til virksomheten»</h3>
-          <p>Klikk på <code>Andre med rettigheter til virksomheten</code> og deretter <code>Legg til person eller virksomhet</code>.</p>
-
-          <div class="step-screenshot">
-            <img src="images/page-11.jpg" alt="Skjermbilde: Altinn profil → Andre med rettigheter">
-            <div class="step-caption">Altinn: Profil-menyen med «Andre med rettigheter til virksomheten»</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-num">3</div>
-        <div class="step-content">
-          <h3>Legg til Alice &amp; Bob AS som ekstern virksomhet</h3>
-          <p>Trykk på <code>Ekstern virksomhet</code> og legg til <strong>Alice &amp; Bob AS</strong> med organisasjonsnummer <strong>931686054</strong>.</p>
-
-          <div class="step-screenshot">
-            <img src="images/page-12.jpg" alt="Skjermbilde: Legg til Alice &amp; Bob og tjenestekode 4752">
-            <div class="step-caption">Ekstern virksomhet + tjenestekode 4752 (Digital samhandling ved eiendomshandel)</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-num">4</div>
-        <div class="step-content">
-          <h3>Gi tilgang til tjenestekode 4752</h3>
-          <p>Trykk på <code>Gi tilgang til enkelttjenester</code> og søk frem tjenesten med kode <strong>4752 (Digital samhandling ved eiendomshandel)</strong>, og klikk på den.</p>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-num">5</div>
-        <div class="step-content">
-          <h3>Trykk «Neste» og velg «Gi rettigheter»</h3>
-          <p>Fullfør rettighetsoverføringen ved å klikke <code>Neste</code> og deretter <code>Gi rettigheter</code>.</p>
-
-          <div class="step-screenshot">
-            <img src="images/page-13.jpg" alt="Skjermbilde: Gi nye rettigheter — Neste">
-            <div class="step-caption">Siste steg: Trykk Neste for å fullføre rettighetsoverføringen</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="callout green">
-        <div class="callout-title">Ferdig</div>
-        <p>Alice &amp; Bob AS kan nå kommunisere med Kartverket på vegne av din virksomhet. Dette er en engangsjobb per organisasjonsnummer.</p>
-      </div>
-
-      <div class="pagination">
-        <a class="prev" href="#" onclick="goTo('vitec-signering'); return false;">
-          <div class="pagination-label">← Forrige</div>
-          <div class="pagination-title">Send til signering</div>
-        </a>
-        <a class="next" href="#" onclick="goTo('bankid'); return false;">
-          <div class="pagination-label">Neste →</div>
-          <div class="pagination-title">Logge inn med BankID</div>
-        </a>
-      </div>
-    </article>
-
-    <!-- ============ BANKID ============ -->
-    <article class="article" data-article="bankid">
-      <div class="breadcrumb">Oppsett · Innlogging</div>
-      <h1>Logg inn med BankID</h1>
-      <p class="lede">Alle signeringer og tilganger bruker BankID for sikker autentisering.</p>
-
-      <div class="step-screenshot">
-        <img src="images/page-14.jpg" alt="Skjermbilde: Innloggingsskjerm med Alice &amp; Bob-illustrasjon og BankID-prompt">
-        <div class="step-caption">Alice &amp; Bob sin innloggingsskjerm med BankID</div>
-      </div>
-
-      <p>Innlogging skjer via BankID. Taste inn fødselsnummer og følg BankID-flyten som normalt. Ingen spesielle steg er nødvendig.</p>
-
-      <div class="callout blue">
-        <div class="callout-title">Sikkerhet</div>
-        <p>Alice &amp; Bob er bygget på kryptografisk infrastruktur — signaturene dine er ekte, meldingene kryptert, og hver forsendelse sporbar. BankID er én del av dette.</p>
-      </div>
-
-      <div class="pagination">
-        <a class="prev" href="#" onclick="goTo('altinn-tilganger'); return false;">
-          <div class="pagination-label">← Forrige</div>
-          <div class="pagination-title">Altinn-tilganger</div>
-        </a>
-        <a class="next" href="#" onclick="goTo('propware-dokument'); return false;">
-          <div class="pagination-label">Neste →</div>
-          <div class="pagination-title">Propware: Legg til dokument</div>
-        </a>
-      </div>
-    </article>
-
-    <!-- ============ PROPWARE: DOKUMENT ============ -->
-    <article class="article" data-article="propware-dokument">
-      <div class="breadcrumb">Propware · Steg 1 av 6</div>
-      <h1>Legg til tinglysingsdokument</h1>
-      <p class="lede">Opprett et nytt dokument fra oppdragssiden i Propware.</p>
-
-      <div class="step">
-        <div class="step-num">1</div>
-        <div class="step-content">
-          <h3>Gå til oppdraget og klikk «Legg til dokument»</h3>
-          <p>Oppdragssiden viser «Dette oppdraget har ingen dokumenter enda.» Klikk <code>Legg til dokument</code> for å åpne typemenyen.</p>
-
-          <div class="step-screenshot">
-            <img src="images/page-15.jpg" alt="Skjermbilde: Legg til dokument-menyen i Propware">
-            <div class="step-caption">Propware: Legg til dokument → velg type</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-num">2</div>
-        <div class="step-content">
-          <h3>Velg dokumenttype</h3>
-          <p>Velg typen dokument du skal opprette:</p>
-          <ul>
-            <li><strong>Skjøte</strong> — overføring av hjemmel</li>
-            <li><strong>Hjemmelserklæring</strong> — ved dødsbo</li>
-            <li><strong>Pantedokument fra bank</strong> — se <a href="#" onclick="goTo('propware-pantedokument'); return false;">egen veileder</a></li>
-            <li><strong>Sikring</strong> — se <a href="#" onclick="goTo('propware-sikring'); return false;">egen veileder</a></li>
-            <li><strong>Sletting</strong> — slette tinglyst pant</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="callout">
-        <div class="callout-title">Utfylling</div>
-        <p>Følg videre flyt i systemet og fyll inn informasjon som mangler. Mye av informasjonen i tinglysingsdokumentet er ofte ferdig utfylt basert på oppgitt informasjon i oppdraget. Du kan likevel redigere og endre data der det er relevant.</p>
-      </div>
-
-      <div class="pagination">
-        <a class="prev" href="#" onclick="goTo('bankid'); return false;">
-          <div class="pagination-label">← Forrige</div>
-          <div class="pagination-title">Logge inn med BankID</div>
-        </a>
-        <a class="next" href="#" onclick="goTo('propware-skjote'); return false;">
-          <div class="pagination-label">Neste →</div>
-          <div class="pagination-title">Send skjøte til signering</div>
-        </a>
-      </div>
-    </article>
-
-    <!-- ============ PROPWARE: SKJØTE ============ -->
-    <article class="article" data-article="propware-skjote">
-      <div class="breadcrumb">Propware · Steg 2 av 6</div>
-      <h1>Send skjøte til signering</h1>
-      <p class="lede">Når skjøtet er opprettet og klart — send det til signering.</p>
-
-      <div class="step">
-        <div class="step-num">1</div>
-        <div class="step-content">
-          <h3>Klikk «Send til signering»</h3>
-          <p>Send tinglysingsdokumentet til signering dersom det ikke er behov for hjelpedokumenter eller signaturer fra personer utenfor oppdraget. Ved behov kan du også forhåndsvise dokumentet før du sender det til signering.</p>
-
-          <div class="step-screenshot">
-            <img src="images/page-16.jpg" alt="Skjermbilde: Skjøte med Send til signering-knapp">
-            <div class="step-caption">Propware: Skjøte lagret — klar til signering</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-num">2</div>
-        <div class="step-content">
-          <h3>Følg med på signeringsstatus</h3>
-          <p>Etter innsending vises status som «0 av 3 har signert», «1 av 3 har signert», og til slutt «Alle har signert» når alle parter er ferdige.</p>
-
-          <div class="step-screenshot">
-            <img src="images/page-17.jpg" alt="Skjermbilde: 0 av 3 har signert med tre prikker-meny">
-            <div class="step-caption">Signeringsstatus — og de tre prikkene gir tilgang til flere handlinger</div>
-          </div>
-
-          <div class="step-screenshot">
-            <img src="images/page-18.jpg" alt="Skjermbilde: 1 av 3 har signert">
-            <div class="step-caption">Status oppdateres etterhvert som parter signerer</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="pagination">
-        <a class="prev" href="#" onclick="goTo('propware-dokument'); return false;">
-          <div class="pagination-label">← Forrige</div>
-          <div class="pagination-title">Legg til dokument</div>
-        </a>
-        <a class="next" href="#" onclick="goTo('propware-vedlegg'); return false;">
-          <div class="pagination-label">Neste →</div>
-          <div class="pagination-title">Legg til vedlegg</div>
-        </a>
-      </div>
-    </article>
-
-    <!-- ============ PROPWARE: VEDLEGG ============ -->
-    <article class="article" data-article="propware-vedlegg">
-      <div class="breadcrumb">Propware · Steg 3 av 6</div>
-      <h1>Legg til vedlegg</h1>
-      <p class="lede">Dokumenter som krever vedlegg — skifteattest, fullmakt, samtykke — lastes opp via de tre prikkene.</p>
-
-      <div class="step">
-        <div class="step-num">1</div>
-        <div class="step-content">
-          <h3>Klikk på de tre prikkene til høyre for dokumentet</h3>
-          <p>Menyen viser tre valg: <code>Rediger</code>, <code>Vis vedlegg</code>, og <code>Legg til vedlegg</code>.</p>
-
-          <div class="step-screenshot">
-            <img src="images/page-22.jpg" alt="Skjermbilde: Last opp vedlegg-dialog med kategori-dropdown">
-            <div class="step-caption">Dra filen hit eller klikk for å laste opp — velg deretter vedleggskategori</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-num">2</div>
-        <div class="step-content">
-          <h3>Velg vedleggskategori og last opp</h3>
-          <p>Velg riktig kategori fra nedtrekksmenyen. Se <a href="#" onclick="goTo('vedleggstyper'); return false;">liste over støttede vedleggstyper</a>.</p>
-        </div>
-      </div>
-
-      <div class="callout">
-        <div class="callout-title">Går til manuell behandling</div>
-        <p>Alle forsendelser med vedlegg vurderes manuelt av en saksbehandler hos Kartverket. Behandlingstiden varierer.</p>
-      </div>
-
-      <div class="pagination">
-        <a class="prev" href="#" onclick="goTo('propware-skjote'); return false;">
-          <div class="pagination-label">← Forrige</div>
-          <div class="pagination-title">Send skjøte til signering</div>
-        </a>
-        <a class="next" href="#" onclick="goTo('propware-tinglys'); return false;">
-          <div class="pagination-label">Neste →</div>
-          <div class="pagination-title">Tinglys signerte dokumenter</div>
-        </a>
-      </div>
-    </article>
-
-    <!-- ============ PROPWARE: TINGLYS ============ -->
-    <article class="article" data-article="propware-tinglys">
-      <div class="breadcrumb">Propware · Steg 4 av 6</div>
-      <h1>Tinglys signerte dokumenter</h1>
-      <p class="lede">Når alle parter har signert, er dokumentet klart for tinglysing hos Kartverket.</p>
-
-      <div class="step">
-        <div class="step-num">1</div>
-        <div class="step-content">
-          <h3>Kryss av dokumentet og klikk «Tinglys valgte»</h3>
-          <p>Når «Alle har signert» vises, krysser du av dokumentet og klikker <code>Tinglys valgte</code>.</p>
-
-          <div class="step-screenshot">
-            <img src="images/page-19.jpg" alt="Skjermbilde: Alle har signert — Tinglys valgte">
-            <div class="step-caption">Når alle har signert, blir Tinglys valgte-knappen aktiv</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-num">2</div>
-        <div class="step-content">
-          <h3>Bekreft innsending i dialogen</h3>
-          <p>En dialog åpnes med valg: <code>Send inn</code>, <code>Forhåndsvis</code> eller <code>Avbryt</code>. Klikk <code>Send inn</code> for å sende til Kartverket.</p>
-
-          <div class="step-screenshot">
-            <img src="images/page-20.jpg" alt="Skjermbilde: Tinglys-dialog med Send inn-knapp">
-            <div class="step-caption">Bekreft innsendingen til Kartverket</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-num">3</div>
-        <div class="step-content">
-          <h3>Vent på svar fra Kartverket</h3>
-          <p>Forsendelsen er nå sendt inn. Systemet viser «Venter på endelig svar fra Kartverket».</p>
-
-          <div class="step-screenshot">
-            <img src="images/page-21.jpg" alt="Skjermbilde: Forsendelse sendt — venter på svar">
-            <div class="step-caption">Forsendelsen er sendt og venter på Kartverkets behandling</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="callout blue">
-        <div class="callout-title">Hva skjer videre?</div>
-        <p>Kartverket validerer forsendelsen. Resultatet er alltid ett av tre utfall — se <a href="#" onclick="goTo('valideringsfeil'); return false;">full forklaring</a>.</p>
-      </div>
-
-      <div class="pagination">
-        <a class="prev" href="#" onclick="goTo('propware-vedlegg'); return false;">
-          <div class="pagination-label">← Forrige</div>
-          <div class="pagination-title">Legg til vedlegg</div>
-        </a>
-        <a class="next" href="#" onclick="goTo('propware-pantedokument'); return false;">
-          <div class="pagination-label">Neste →</div>
-          <div class="pagination-title">Pantedokument fra bank</div>
-        </a>
-      </div>
-    </article>
-
-    <!-- ============ PROPWARE: PANTEDOKUMENT ============ -->
-    <article class="article" data-article="propware-pantedokument">
-      <div class="breadcrumb">Propware · Steg 5 av 6</div>
-      <h1>Last opp pantedokument fra bank</h1>
-      <p class="lede">Banken sender et signert pantedokument (<code>pant-signed.sdo</code>) som legges inn i forsendelsen.</p>
-
-      <div class="step">
-        <div class="step-num">1</div>
-        <div class="step-content">
-          <h3>Klikk «Legg til dokument» → «Pantedokument fra bank»</h3>
-          <p>På oppdraget, klikk <code>Legg til dokument</code> og velg <strong>Pantedokument fra bank</strong> fra menyen. En opplastingsdialog åpnes.</p>
-
-          <div class="step-screenshot">
-            <img src="images/page-25.jpg" alt="Skjermbilde: Last opp pantedokument-dialog">
-            <div class="step-caption">Dra <code>pant-signed.sdo</code>-filen hit eller klikk for å laste opp</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-num">2</div>
-        <div class="step-content">
-          <h3>Last opp filen fra banken</h3>
-          <p>Filen kommer fra banken og heter typisk <code>pant-signed.sdo</code>. Last den opp og klikk <code>Last opp</code>.</p>
-
-          <div class="step-screenshot">
-            <img src="images/page-26.jpg" alt="Skjermbilde: pant-signed.sdo lastet opp — klar for innsending">
-            <div class="step-caption">Filen er lastet opp og er klar for videre behandling</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="callout blue">
-        <div class="callout-title">Validering fra Kartverket</div>
-        <p>Når pantedokumentet lastes opp, kjøres det gjennom Kartverkets validering — typiske meldinger er «Mangler signatur fra rettighetshaver» eller «Ikke godkjent: Eier kan ikke avhende». Se <a href="#" onclick="goTo('valideringsfeil'); return false;">full oversikt over valideringsfeil</a>.</p>
-      </div>
-
-      <div class="pagination">
-        <a class="prev" href="#" onclick="goTo('propware-tinglys'); return false;">
-          <div class="pagination-label">← Forrige</div>
-          <div class="pagination-title">Tinglys signerte dokumenter</div>
-        </a>
-        <a class="next" href="#" onclick="goTo('propware-sikring'); return false;">
-          <div class="pagination-label">Neste →</div>
-          <div class="pagination-title">Opprett sikring</div>
-        </a>
-      </div>
-    </article>
-
-    <!-- ============ PROPWARE: SIKRING ============ -->
-    <article class="article" data-article="propware-sikring">
-      <div class="breadcrumb">Propware · Steg 6 av 6</div>
-      <h1>Opprett sikring</h1>
-      <p class="lede">Sikring sperrer eiendommen for videre tinglysing — brukt for eksempel i oppgjørsprosesser.</p>
-
-      <div class="step">
-        <div class="step-num">1</div>
-        <div class="step-content">
-          <h3>Legg til dokument → Sikring</h3>
-          <p>På oppdraget, klikk <code>Legg til dokument</code> og velg <strong>Sikring</strong> fra menyen.</p>
-
-          <div class="step-screenshot">
-            <img src="images/page-29.jpg" alt="Skjermbilde: Legg til dokument → Sikring">
-            <div class="step-caption">Velg Sikring fra dokumenttype-menyen</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-num">2</div>
-        <div class="step-content">
-          <h3>Fyll inn pantekrav og rettighetshaver</h3>
-          <p>Oppgi pantekravets beløp, rettighetshaver (typisk oppgjørsselskap), og velg panteobjekter.</p>
-
-          <div class="step-screenshot">
-            <img src="images/page-27.jpg" alt="Skjermbilde: Ny sikring-skjema">
-            <div class="step-caption">Pantekrav, rettighetshaver og panteobjekt i sikringsskjemaet</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-num">3</div>
-        <div class="step-content">
-          <h3>Velg personer som skal signere</h3>
-          <p>Under <code>Signeres av</code>, velg hvilke personer som skal signere sikringen.</p>
-
-          <div class="step-screenshot">
-            <img src="images/page-28.jpg" alt="Skjermbilde: Signeres av — Velg personer">
-            <div class="step-caption">Klikk «Velg personer» for å legge til signatarer</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-num">4</div>
-        <div class="step-content">
-          <h3>Send til signering og tinglys</h3>
-          <p>Når sikringen er klar, send den til signering og deretter til tinglysing på samme måte som et skjøte.</p>
-
-          <div class="step-screenshot">
-            <img src="images/page-30.jpg" alt="Skjermbilde: Sikring klar for Send til signering">
-            <div class="step-caption">Sikring lagret — klikk Send til signering</div>
-          </div>
-
-          <div class="step-screenshot">
-            <img src="images/page-31.jpg" alt="Skjermbilde: Alle har signert — Tinglys valgte → Send inn">
-            <div class="step-caption">Etter signering: Tinglys valgte → Send inn</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="pagination">
-        <a class="prev" href="#" onclick="goTo('propware-pantedokument'); return false;">
-          <div class="pagination-label">← Forrige</div>
-          <div class="pagination-title">Pantedokument fra bank</div>
-        </a>
-        <a class="next" href="#" onclick="goTo('valideringsfeil'); return false;">
-          <div class="pagination-label">Neste →</div>
-          <div class="pagination-title">Valideringsfeil</div>
-        </a>
-      </div>
-    </article>
-
-    <!-- ============ REFERANSE: VALIDERINGSFEIL ============ -->
-    <article class="article" data-article="valideringsfeil">
-      <div class="breadcrumb">Referanse</div>
-      <h1>Valideringsfeil fra Kartverket</h1>
-      <p class="lede">Alle valideringsfeil som vises i tinglysingsdokumentet kommer direkte fra Kartverket.</p>
-
-      <p>Kontrollen skjer i Kartverkets systemer, og vi viser tilbakemeldingene deres. Valideringsfeilene betyr at Kartverket har funnet mangler eller feil i dokumentet. Disse må leses og rettes før dokumentet sendes til signering.</p>
-
-      <div class="callout">
-        <div class="callout-title">Viktig</div>
-        <p>Et ferdig signert tinglysingsdokument kan ikke endres. Les alltid valideringsmeldingene nøye før du sender dokumentet til signering.</p>
-      </div>
-
-      <h2>Tre mulige utfall</h2>
-      <p>Når forsendelsen sendes inn, er resultatet alltid ett av disse tre:</p>
+    <!-- Panel 3 — three outcomes -->
+    <article class="panel" data-step="3">
+      <h2>Tre ting kan skje når du sender inn</h2>
+      <p class="lede">Kartverket validerer forsendelsen. Resultatet er alltid ett av disse.</p>
 
       <div class="outcomes">
-        <div class="outcome red">
+        <div class="outcome outcome-red" onclick="showToast('Avvisning: Forsendelsen stoppes før en saksbehandler ser den. Du må rette feilene og sende på nytt.')">
           <span class="outcome-pill">AVVIST</span>
-          <h4>«Sjansen er stor for at forsendelsen vil avvises…»</h4>
+          <div class="outcome-icon"><svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="22"/><line x1="24" y1="24" x2="40" y2="40"/><line x1="40" y1="24" x2="24" y2="40"/></svg></div>
+          <h4>Forsendelsen stoppes</h4>
           <ul>
-            <li>Stoppes automatisk i Kartverkets systemer</li>
-            <li>Ingen saksbehandler vurderer forsendelsen</li>
+            <li>Stoppes automatisk</li>
+            <li>Ingen saksbehandler ser den</li>
             <li>Registreres ikke i grunnboken</li>
           </ul>
         </div>
-        <div class="outcome amber">
+        <div class="outcome outcome-amber" onclick="showToast('Manuell behandling: En saksbehandler hos Kartverket vurderer forsendelsen. Behandlingstiden varierer.')">
           <span class="outcome-pill">MANUELL</span>
-          <h4>«…vil gå til manuell behandling…»</h4>
+          <div class="outcome-icon"><svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="22"/><polyline points="32,18 32,32 42,38"/></svg></div>
+          <h4>Saksbehandler vurderer</h4>
           <ul>
-            <li>Vurderes av saksbehandler hos Kartverket</li>
-            <li>Behandlingstid varierer etter kapasitet</li>
-            <li>Utfall avgjøres etter manuell vurdering</li>
+            <li>Går til manuell behandling</li>
+            <li>Behandlingstid varierer</li>
+            <li>Utfall avhenger av vurdering</li>
           </ul>
         </div>
-        <div class="outcome green">
+        <div class="outcome outcome-green" onclick="showToast('Godkjent: Dokumentet tinglyses automatisk i løpet av sekunder. Ferdig.')">
           <span class="outcome-pill">GODKJENT</span>
-          <h4>Ingen feil — dokumentet er korrekt utfylt</h4>
+          <div class="outcome-icon"><svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="22"/><polyline points="22,32 29,39 42,25"/></svg></div>
+          <h4>Tinglyst automatisk</h4>
           <ul>
-            <li>Godkjennes automatisk ved innsending</li>
-            <li>Tinglyses i løpet av sekunder</li>
+            <li>Godkjennes av Kartverket</li>
+            <li>Tinglyses på sekunder</li>
             <li>Ingenting mer å gjøre</li>
           </ul>
         </div>
@@ -1474,220 +1041,253 @@
 
       <div class="callout blue">
         <div class="callout-title">Unntak fra avvisning</div>
-        <p>Dokumenter som ellers ville blitt avvist, kan likevel behandles dersom forsendelsen inneholder et annet dokument som utløser manuell behandling først — for eksempel en hjemmelserklæring.</p>
+        <p>Et dokument som normalt ville blitt avvist kan likevel behandles dersom forsendelsen inneholder et annet dokument som utløser manuell behandling først — for eksempel en hjemmelserklæring.</p>
       </div>
 
-      <h2>Hva gjør du ved avvisning?</h2>
-      <p>Dersom forsendelsen blir avvist og ikke registreres i grunnboken, får du en detaljert forklaring fra Kartverket på hva som manglet eller var feil. Rett opp i feilene og send inn på nytt.</p>
+      <p style="font-size: 13px; color: var(--muted); margin-top: 16px; font-style: italic;">Trykk på hvert utfall for mer info.</p>
+    </article>
 
-      <p>Spørsmål om utfylling eller krav til dokumentasjon må rettes til Kartverket direkte. Se <a href="#" onclick="goTo('kontakt'); return false;">kontaktinformasjon</a>.</p>
+    <!-- Panel 4 — the rule -->
+    <article class="panel" data-step="4">
+      <h2>Én regel du aldri må glemme</h2>
+      <p class="lede">Dette er det viktigste du tar med deg fra denne gjennomgangen.</p>
 
-      <div class="pagination">
-        <a class="prev" href="#" onclick="goTo('propware-sikring'); return false;">
-          <div class="pagination-label">← Forrige</div>
-          <div class="pagination-title">Opprett sikring</div>
-        </a>
-        <a class="next" href="#" onclick="goTo('vedleggstyper'); return false;">
-          <div class="pagination-label">Neste →</div>
-          <div class="pagination-title">Støttede vedleggstyper</div>
-        </a>
+      <div class="rule-layout">
+        <div class="mallory-wrap">
+          <img src="data:image/png;base64,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RQi/zwoWAECYgAUAECZgAQCEmYMFI9J1XdOBmc/nzeM6MBxT7Vzd3d2d6U7g8lnBAgAIE7AAAMIELACAMHOwYETqnKuu65rHN5vNoA7WP//5z+Z6//jHP3S4+K/MWYMcK1gAAGECFgBAmIAFABCmgwUjUjswNzftqLr1eq0Dw9HU719lDhv8PitYAABhAhYAQJiABQAQZi9CAP5S7QACv88KFgBAmIAFABAmYAEAhPkPdhiR2nnZbDZnuhM+I98/yLGCBQAQJmABAIQJWAAAYTpYMCK183J/f3+mO+Ez8v2DHCtYAABhAhYAQJiABQAQNvn4+Dj3PQAAXBUrWAAAYQIWAECYgAUAECZgAQCECVgAAGECFgBAmIAFABAmYAEAhAlYAABhAhYAQJiABQAQJmABAIQJWAAAYQIWAECYgAUAECZgAQCECVgAAGECFgBAmIAFABAmYAEAhAlYAABhAhYAQJiABQAQJmABAIQJWAAAYQIWAECYgAUAECZgAQCECVgAAGECFgBAmIAFABAmYAEAhAlYAABhAhYAQJiABQAQJmABAIQJWAAAYQIWAECYgAUAECZgAQCECVgAAGECFgBAmIAFABAmYAEAhAlYAABhAhYAQJiABQAQJmABAIQJWAAAYQIWAECYgAUAECZgAQCECVgAAGECFgBAmIAFABAmYAEAhAlYAABhAhYAQJiABQAQJmABAIQJWAAAYQIWAECYgAUAECZgAQCECVgAAGECFgBAmIAFABAmYAEAhAlYAABhAhYAQJiABQAQJmABAIQJWAAAYQIWAECYgAUAECZgAQCECVgAAGECFgBAmIAFABAmYAEAhAlYAABhAhYAQJiABQAQJmABAIQJWAAAYQIWAECYgAUAECZgAQCECVgAAGECFgBAmIAFABAmYAEAhAlYAABhAhYAQJiABQAQJmABAIQJWAAAYQIWAECYgAUAECZgAQCECVgAAGECFgBAmIAFABAmYAEAhAlYAABhAhYAQJiABQAQJmABAIQJWAAAYQIWAECYgAUAECZgAQCECVgAAGECFgBAmIAFABAmYAEAhAlYAABhAhYAQJiABQAQJmABAIQJWAAAYQIWAECYgAUAECZgAQCECVgAAGECFgBAmIAFABAmYAEAhAlYAABhAhYAQJiABQAQJmABAIQJWAAAYQIWAECYgAUAECZgAQCECVgAAGECFgBAmIAFABAmYAEAhAlYAABhAhYAQJiABQAQJmABAIQJWAAAYQIWAECYgAUAECZgAQCECVgAAGECFgBAmIAFABAmYAEAhAlYAABhAhYAQJiABQAQJmABAIQJWAAAYQIWAECYgAUAECZgAQCECVgAAGECFgBAmIAFABD2fxUHK3towb+YAAAAAElFTkSuQmCC" alt="Mallory" class="character-illustration">
+          <div class="mallory-caption">Mallory ville gjerne ha forfalsket dokumentet</div>
+        </div>
+        <div class="big-rule-text">
+          <h3>Et ferdig signert tinglysingsdokument<br><span class="highlight">kan ikke endres.</span></h3>
+          <p>Derfor må du alltid lese valideringsmeldingene nøye før du sender dokumentet til signering. Er du i tvil, sjekk med Kartverket først.</p>
+        </div>
+      </div>
+
+      <div class="callout gray">
+        <div class="callout-title">Tips</div>
+        <p>Har du sett en valideringsmelding du ikke forstår? Ring Kartverket på <strong>32 11 80 00</strong> før du sender.</p>
       </div>
     </article>
 
-    <!-- ============ REFERANSE: VEDLEGG ============ -->
-    <article class="article" data-article="vedleggstyper">
-      <div class="breadcrumb">Referanse</div>
-      <h1>Støttede vedleggstyper</h1>
+    <!-- Panel 5 — attachments -->
+    <article class="panel" data-step="5">
+      <h2>Tinglysing med vedlegg</h2>
       <p class="lede">Vi støtter alle vedleggskategorier Kartverket har åpnet for.</p>
 
-      <p>Når et dokument krever vedlegg, velger du kategori fra nedtrekksmenyen i opplastingsdialogen. Se <a href="#" onclick="goTo('propware-vedlegg'); return false;">hvordan du laster opp vedlegg</a>.</p>
+      <div class="two-col">
+        <div>
+          <h3>Støttede vedleggstyper</h3>
+          <div class="vedlegg-grid">
+            <div>Skifteattest og uskifteattest</div>
+            <div>Bostyrerattest</div>
+            <div>Skiftefullmakt</div>
+            <div>Testament og ektepakt</div>
+            <div>Gjensidig testament</div>
+            <div>Begrunnelse for dokumentavgift</div>
+            <div>Salgsfullmakt</div>
+            <div>Kjøpsfullmakt</div>
+            <div>Samtykke til urådighet</div>
+            <div>Samtykke fra bortfester</div>
+            <div>Annet</div>
+          </div>
+        </div>
+        <div>
+          <div class="callout">
+            <div class="callout-title">Går alltid til manuell behandling</div>
+            <p>Alle forsendelser med vedlegg vurderes manuelt av en saksbehandler hos Kartverket. Behandlingstiden varierer.</p>
+          </div>
 
-      <h2>Alle støttede kategorier</h2>
-      <ul>
-        <li><strong>Skifteattest, uskifteattest og bostyrerattest</strong> — ved dødsboskifte</li>
-        <li><strong>Skiftefullmakt</strong></li>
-        <li><strong>Testament og ektepakt</strong> ved dødsboskifte</li>
-        <li><strong>Gjensidig testament</strong></li>
-        <li><strong>Begrunnelse for dokumentavgift</strong></li>
-        <li><strong>Salgsfullmakt</strong></li>
-        <li><strong>Kjøpsfullmakt</strong></li>
-        <li><strong>Samtykke fra rettighetshaver til urådighet</strong></li>
-        <li><strong>Samtykke fra bortfester</strong></li>
-        <li><strong>Annet</strong></li>
-      </ul>
-
-      <div class="callout">
-        <div class="callout-title">Forsendelser med vedlegg</div>
-        <p>Alle forsendelser med vedlegg går automatisk til manuell behandling hos Kartverket. Behandlingstiden avhenger av Kartverkets kapasitet.</p>
-      </div>
-
-      <div class="pagination">
-        <a class="prev" href="#" onclick="goTo('valideringsfeil'); return false;">
-          <div class="pagination-label">← Forrige</div>
-          <div class="pagination-title">Valideringsfeil</div>
-        </a>
-        <a class="next" href="#" onclick="goTo('kontakt'); return false;">
-          <div class="pagination-label">Neste →</div>
-          <div class="pagination-title">Hjelp og kontakt</div>
-        </a>
+          <h3 style="margin-top: 32px;">Slik gjør du det</h3>
+          <ol style="padding-left: 20px; font-size: 14px; line-height: 1.8;">
+            <li>Opprett tinglysingsdokumentet</li>
+            <li>Klikk på de tre prikkene til høyre</li>
+            <li>Velg vedleggstype og last opp</li>
+            <li>Signer med BankID og send inn</li>
+          </ol>
+        </div>
       </div>
     </article>
 
-    <!-- ============ KONTAKT ============ -->
-    <article class="article" data-article="kontakt">
-      <div class="breadcrumb">Referanse</div>
-      <h1>Hjelp og kontakt</h1>
+    <!-- Panel 6 — Special cases -->
+    <article class="panel" data-step="6">
+      <h2>Spesialtilfeller</h2>
+      <p class="lede">To scenarioer du sannsynligvis møter før eller siden.</p>
+
+      <h3 style="font-family: var(--title-font); font-size: 22px; font-weight: 700; margin-top: 16px;">Skjøte med hjemmelserklæring</h3>
+      <p style="margin-bottom: 20px;">Ved dødsbo der en eiendom skal overdras fra avdød til arving eller tredjepart. Forsendelsen skal inneholde tre dokumenter, i rekkefølge:</p>
+
+      <div class="doc-flow-item">
+        <div class="doc-num">1</div>
+        <div class="doc-info">
+          <h4>Hjemmelserklæring</h4>
+          <p>Overfører hjemmel fra avdøde til dødsbo eller arving</p>
+        </div>
+      </div>
+      <div class="doc-flow-item">
+        <div class="doc-num">2</div>
+        <div class="doc-info">
+          <h4>Skjøte</h4>
+          <p>Overfører hjemmel videre til ny eier</p>
+        </div>
+      </div>
+      <div class="doc-flow-item">
+        <div class="doc-num">3</div>
+        <div class="doc-info">
+          <h4>Skifteattest</h4>
+          <p>Lastes opp som vedlegg (eller uskifte-/bostyrerattest)</p>
+        </div>
+      </div>
+
+      <div class="callout gray">
+        <div class="callout-title">Merk</div>
+        <p><strong>Rekkefølgen er viktig.</strong> Hjemmelserklæringen må ligge først for at Kartverket skal kunne behandle forsendelsen.</p>
+      </div>
+
+      <h3 style="font-family: var(--title-font); font-size: 22px; font-weight: 700; margin-top: 40px;">Urådighet ved dødsfall</h3>
+      <p style="margin-bottom: 20px;">En sperre som aktiveres først når hjemmelshaver dør. Brukes typisk av gjenlevende ektefelle eller samboer, i arveoppgjør, eller ved gaver med forbehold.</p>
+
+      <div class="req-list">
+        <div class="req-item">
+          <div class="req-icon">
+            <svg viewBox="0 0 64 64"><circle cx="20" cy="32" r="10"/><line x1="30" y1="32" x2="54" y2="32"/><line x1="46" y1="32" x2="46" y2="40"/><line x1="52" y1="32" x2="52" y2="42"/></svg>
+          </div>
+          <div class="req-body">
+            <h4>BankID-signatur</h4>
+            <p>Fra hjemmelshaver</p>
+          </div>
+        </div>
+        <div class="req-item">
+          <div class="req-icon">
+            <svg viewBox="0 0 64 64"><circle cx="22" cy="22" r="7"/><circle cx="42" cy="22" r="7"/><path d="M10 48 C10 40, 16 34, 22 34 C28 34, 34 40, 34 48"/><path d="M30 48 C30 40, 36 34, 42 34 C48 34, 54 40, 54 48"/></svg>
+          </div>
+          <div class="req-body">
+            <h4>Rettighetshaver</h4>
+            <p>Navn og fødsels- eller organisasjonsnummer</p>
+          </div>
+        </div>
+        <div class="req-item">
+          <div class="req-icon">
+            <svg viewBox="0 0 64 64"><path d="M44 20 L24 40 C20 44, 20 50, 24 54 C28 58, 34 58, 38 54 L52 40 C56 36, 56 28, 50 22 C44 16, 36 16, 32 20 L20 32"/></svg>
+          </div>
+          <div class="req-body">
+            <h4>Samtykke (valgfritt)</h4>
+            <p>Som vedlegg, hvis rettighetshaver må samtykke til opphevelse</p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Panel 7 — Help -->
+    <article class="panel" data-step="7">
+      <h2>Hvor du får hjelp</h2>
       <p class="lede">To kilder, avhengig av hva du trenger svar på.</p>
 
       <div class="contact-grid">
         <div class="contact-card">
+          <div class="contact-icon">
+            <svg viewBox="0 0 64 64"><path d="M14 16 C14 14, 16 12, 18 12 L22 12 C24 12, 25 14, 26 16 L28 22 C28 24, 27 25, 26 26 L24 28 C26 34, 30 38, 36 40 L38 38 C39 37, 40 36, 42 36 L48 38 C50 39, 52 40, 52 42 L52 46 C52 48, 50 50, 48 50 C28 50, 14 36, 14 16 Z"/></svg>
+          </div>
           <h3>Kartverket</h3>
-          <div class="desc">For utfylling, krav til dokumentasjon, og avviste forsendelser.</div>
-          <div class="primary"><a href="tel:32118000">32 11 80 00</a></div>
-          <div class="when"><strong>Ring hit når</strong> du lurer på hvordan et dokument skal fylles ut riktig, eller når en forsendelse er blitt avvist og du trenger detaljer om hvorfor.</div>
+          <p class="contact-desc">For utfylling, krav til dokumentasjon, og avviste forsendelser</p>
+          <div class="contact-primary">32 11 80 00</div>
+          <div class="contact-when"><strong>Ring hit når</strong> du lurer på hvordan et dokument skal fylles ut riktig.</div>
         </div>
         <div class="contact-card">
-          <img src="images/logo-ab.png" alt="A → B" class="logo-mini">
+          <img src="data:image/png;base64,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" alt="A → B" class="contact-ab-logo">
           <h3>Alice &amp; Bob</h3>
-          <div class="desc">For tekniske spørsmål om tinglysingsmotoren og integrasjonen med fagsystemet ditt.</div>
-          <div class="primary"><a href="mailto:marte@alice-bob.no">marte@alice-bob.no</a></div>
-          <div class="primary" style="font-size: 16px; margin-top: -8px;"><a href="tel:93215150">932 15 150</a></div>
-          <div class="when"><strong>Kontakt oss</strong> hvis noe ikke oppfører seg som forventet i tinglysingsmotoren, eller hvis du trenger hjelp med integrasjonen mot Vitec eller Propware.</div>
+          <p class="contact-desc">For tekniske spørsmål om tinglysingsmotoren og integrasjonen med fagsystemet</p>
+          <div class="contact-primary"><a href="https://alice-bob.no" style="color: inherit; text-decoration: none;">alice-bob.no</a></div>
+          <div class="contact-when"><strong>Kontakt oss</strong> hvis noe ikke oppfører seg som forventet i tinglysingsmotoren.</div>
         </div>
       </div>
 
-      <div class="pagination">
-        <a class="prev" href="#" onclick="goTo('vedleggstyper'); return false;">
-          <div class="pagination-label">← Forrige</div>
-          <div class="pagination-title">Støttede vedleggstyper</div>
-        </a>
-        <a class="next disabled" href="#">
-          <div class="pagination-label">Siste side</div>
-          <div class="pagination-title">&nbsp;</div>
-        </a>
-      </div>
+      
     </article>
 
-    <!-- ============ SEARCH RESULTS ============ -->
-    <article class="article" data-article="search">
-      <div class="breadcrumb">Søkeresultater</div>
-      <h1 id="searchHeader">Søkeresultater</h1>
-      <div id="searchResults"></div>
-    </article>
+  </section>
 
-  </main>
+  <!-- Paginator -->
+  <div class="paginator">
+    <button id="prevBtn" onclick="prev()">← Forrige</button>
+    <div class="paginator-progress"><span id="progressText2">Steg 1 av 7</span></div>
+    <button id="nextBtn" onclick="next()">Neste →</button>
+  </div>
+
+  <div class="footer">ALICE &amp; BOB · 2026</div>
+
 </div>
 
+<!-- Toast -->
+<div id="toast" style="
+  position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%);
+  background: var(--ink); color: var(--paper); padding: 14px 24px;
+  font-size: 14px; max-width: 480px; opacity: 0; pointer-events: none;
+  transition: opacity 0.2s, transform 0.2s;
+"></div>
+
 <script>
-// Søke-index — tittel, beskrivelse, artikkel-id, nøkkelord
-const SEARCH_INDEX = [
-  { id: 'oversikt', title: 'Hva er elektronisk tinglysing?', desc: 'Oversikt over hvordan systemet fungerer', keywords: 'oversikt intro tinglysing hva er grunnboken' },
-  { id: 'vitec-bestille', title: 'Bestill Alice & Bob-tjeneste', desc: 'Vitec Next: Aktiver e-tinglysing på et oppdrag', keywords: 'vitec bestille tjeneste marked aktivere' },
-  { id: 'vitec-dokumenter', title: 'Velg dokument i Vitec', desc: 'Legg til skjøte, hjemmelserklæring, pantedokument', keywords: 'vitec legg til dokument skjøte hjemmelserklæring pantedokument sikring sletting' },
-  { id: 'vitec-skjote', title: 'Opprett et nytt skjøte i Vitec', desc: 'Fyll inn felter og rediger data', keywords: 'vitec skjøte nytt opprette fylle ut rediger' },
-  { id: 'vitec-valideringsfeil', title: 'Lagring med valideringsfeil', desc: 'Lagre selv med feil fra Kartverket', keywords: 'vitec lagre valideringsfeil kartverket huk av avkrysning' },
-  { id: 'vitec-signering', title: 'Send skjøte til signering (Vitec)', desc: 'Send dokument til signering, selgers portal', keywords: 'vitec send signering selger portal bankid vedlegg' },
-  { id: 'altinn-tilganger', title: 'Altinn-tilganger (AFPANT)', desc: 'Delegér rettigheter til Alice & Bob AS', keywords: 'altinn afpant tilganger rettigheter kartverket førstegangsoppsett organisasjon 931686054 4752 digital samhandling eiendomshandel' },
-  { id: 'bankid', title: 'Logg inn med BankID', desc: 'Innlogging og autentisering', keywords: 'bankid innlogging logg inn autentisering sikkerhet' },
-  { id: 'propware-dokument', title: 'Legg til dokument i Propware', desc: 'Start et nytt tinglysingsdokument', keywords: 'propware legg til dokument skjøte hjemmelserklæring pantedokument sikring sletting' },
-  { id: 'propware-skjote', title: 'Send skjøte til signering (Propware)', desc: 'Send til signering og følg status', keywords: 'propware skjøte send signering status 0 av 3 alle har signert' },
-  { id: 'propware-vedlegg', title: 'Legg til vedlegg i Propware', desc: 'Last opp skifteattest, fullmakt, samtykke', keywords: 'propware vedlegg last opp skifteattest fullmakt samtykke kategori tre prikker' },
-  { id: 'propware-tinglys', title: 'Tinglys signerte dokumenter', desc: 'Send til Kartverket når alt er signert', keywords: 'propware tinglys valgte send inn kartverket venter svar forsendelse' },
-  { id: 'propware-pantedokument', title: 'Pantedokument fra bank', desc: 'Last opp pant-signed.sdo fra banken', keywords: 'propware pantedokument bank sdo pant-signed last opp' },
-  { id: 'propware-sikring', title: 'Opprett sikring', desc: 'Sperre eiendommen for videre tinglysing', keywords: 'propware sikring sperre pantekrav rettighetshaver panteobjekt oppgjør' },
-  { id: 'valideringsfeil', title: 'Valideringsfeil fra Kartverket', desc: 'De tre utfallene — avvist, manuell, godkjent', keywords: 'valideringsfeil kartverket avvist manuell godkjent utfall feil' },
-  { id: 'vedleggstyper', title: 'Støttede vedleggstyper', desc: 'Full liste over vedleggskategorier', keywords: 'vedlegg kategori skifteattest uskifteattest bostyrerattest testament ektepakt fullmakt samtykke' },
-  { id: 'kontakt', title: 'Hjelp og kontakt', desc: 'Kartverket og Alice & Bob', keywords: 'kontakt hjelp telefon epost kartverket alice bob marte' }
+const TOTAL_STEPS = 7;
+const STEP_LABELS = [
+  { num: '01', label: 'Innhold' },
+  { num: '02', label: 'Hva det er' },
+  { num: '03', label: 'Tre utfall' },
+  { num: '04', label: 'Viktig regel' },
+  { num: '05', label: 'Vedlegg' },
+  { num: '06', label: 'Spesialtilfeller' },
+  { num: '07', label: 'Hjelp' }
 ];
 
-let currentArticle = 'home';
+let current = 1;
 
-function goTo(articleId) {
-  document.querySelectorAll('.article').forEach(a => a.classList.remove('active'));
-  const target = document.querySelector(`.article[data-article="${articleId}"]`);
-  if (target) target.classList.add('active');
+function renderStepper() {
+  const stepper = document.getElementById('stepper');
+  stepper.innerHTML = STEP_LABELS.map((s, i) => {
+    const n = i + 1;
+    const cls = n === current ? 'active' : (n < current ? 'done' : '');
+    return '<button class="step-dot ' + cls + '" onclick="goTo(' + n + ')"><span class="step-num">' + s.num + '</span><span class="step-label">' + s.label + '</span></button>';
+  }).join('');
+}
 
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  const navItem = document.querySelector(`.nav-item[data-article="${articleId}"]`);
-  if (navItem) navItem.classList.add('active');
+function updateProgress() {
+  document.getElementById('progressText').textContent = current + ' / ' + TOTAL_STEPS;
+  document.getElementById('progressText2').textContent = 'Steg ' + current + ' av ' + TOTAL_STEPS;
+  document.getElementById('prevBtn').disabled = current === 1;
+  document.getElementById('nextBtn').disabled = current === TOTAL_STEPS;
+}
 
-  currentArticle = articleId;
+function goTo(n) {
+  if (n < 1 || n > TOTAL_STEPS) return;
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelector('.panel[data-step="' + n + '"]').classList.add('active');
+  current = n;
+  renderStepper();
+  updateProgress();
   window.scrollTo({ top: 0, behavior: 'smooth' });
-
-  if (window.innerWidth <= 900) {
-    document.getElementById('sidebar').classList.remove('open');
-  }
-
-  // Oppdater URL (uten å reloade)
-  if (articleId !== 'home') {
-    history.replaceState(null, '', '#' + articleId);
-  } else {
-    history.replaceState(null, '', window.location.pathname);
-  }
 }
 
-function doSearch() {
-  const q = document.getElementById('searchInput').value.trim().toLowerCase();
-  if (!q) {
-    if (currentArticle === 'search') goTo('home');
-    return;
-  }
+function next() { goTo(current + 1); }
+function prev() { goTo(current - 1); }
 
-  const hits = SEARCH_INDEX.filter(item => {
-    const hay = (item.title + ' ' + item.desc + ' ' + item.keywords).toLowerCase();
-    return hay.includes(q);
-  });
-
-  const resultsEl = document.getElementById('searchResults');
-  const headerEl = document.getElementById('searchHeader');
-  headerEl.textContent = hits.length ? `${hits.length} treff for «${q}»` : `Ingen treff for «${q}»`;
-
-  if (hits.length === 0) {
-    resultsEl.innerHTML = '<p>Prøv et annet søkeord, eller bruk menyen til venstre.</p>';
-  } else {
-    resultsEl.innerHTML = '<div class="topic-grid">' + hits.map(h =>
-      `<a class="topic-card" href="#" onclick="goTo('${h.id}'); return false;">
-        <div class="topic-card-title">${h.title}</div>
-        <div class="topic-card-desc">${h.desc}</div>
-      </a>`
-    ).join('') + '</div>';
-  }
-
-  goTo('search');
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.opacity = '1';
+  t.style.transform = 'translateX(-50%) translateY(-8px)';
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(() => {
+    t.style.opacity = '0';
+    t.style.transform = 'translateX(-50%) translateY(0)';
+  }, 3500);
 }
 
-function toggleSidebar() {
-  document.getElementById('sidebar').classList.toggle('open');
-}
-
-// Sjekk om det er en anchor i URL-en ved lasting
-window.addEventListener('DOMContentLoaded', () => {
-  const hash = window.location.hash.slice(1);
-  if (hash && document.querySelector(`.article[data-article="${hash}"]`)) {
-    goTo(hash);
-  }
-});
-
-// Støtte for tilbake-knappen i nettleseren
-window.addEventListener('hashchange', () => {
-  const hash = window.location.hash.slice(1) || 'home';
-  if (document.querySelector(`.article[data-article="${hash}"]`)) {
-    goTo(hash);
-  }
-});
-
-// Tastatur-snarveier
+// Keyboard nav
 document.addEventListener('keydown', (e) => {
-  if (e.key === '/' && document.activeElement !== document.getElementById('searchInput')) {
-    e.preventDefault();
-    document.getElementById('searchInput').focus();
-  }
-  if (e.key === 'Escape') {
-    document.getElementById('searchInput').value = '';
-    document.getElementById('searchInput').blur();
-  }
+  if (e.key === 'ArrowRight') next();
+  if (e.key === 'ArrowLeft') prev();
 });
-</script>
 
+renderStepper();
+updateProgress();
+</script>
 </body>
 </html>
